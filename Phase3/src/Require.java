@@ -1,26 +1,25 @@
-package Phase3;
 
 import java.util.Objects;
 
-public class Own {
-	private String user_ID;
+public class Require {
+	private int recipe_ID;
 	private int ingredient_ID;
 	private int quantity;
 	private String unit;
 
-	public Own(String user_ID, int ingredient_ID, int quantity, String unit) {
-		this.user_ID = user_ID;
+	public Require(int recipe_ID, int ingredient_ID, int quantity, String unit) {
+		this.recipe_ID = recipe_ID;
 		this.ingredient_ID = ingredient_ID;
 		this.quantity = quantity;
 		this.unit = unit;
 	}
 
-	public String getUser_ID() {
-		return user_ID;
+	public int getRecipe_ID() {
+		return recipe_ID;
 	}
 
-	public void setUser_ID(String user_ID) {
-		this.user_ID = user_ID;
+	public void setRecipe_ID(int recipe_ID) {
+		this.recipe_ID = recipe_ID;
 	}
 
 	public int getIngredient_ID() {
@@ -48,8 +47,8 @@ public class Own {
 	}
 
 	public String toString() {
-		return "Own [user_ID=" + user_ID + ", ingredient_ID=" + ingredient_ID + ", quantity=" + quantity + ", unit="
-				+ unit + "]";
+		return "Require [recipe_ID=" + recipe_ID + ", ingredient_ID=" + ingredient_ID + ", quantity=" + quantity
+				+ ", unit=" + unit + "]";
 	}
 
 	public boolean equals(Object obj) {
@@ -59,8 +58,9 @@ public class Own {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Own other = (Own) obj;
-		return ingredient_ID == other.ingredient_ID && quantity == other.quantity && Objects.equals(unit, other.unit)
-				&& Objects.equals(user_ID, other.user_ID);
+		Require other = (Require) obj;
+		return ingredient_ID == other.ingredient_ID && quantity == other.quantity && recipe_ID == other.recipe_ID
+				&& Objects.equals(unit, other.unit);
 	}
+
 }

@@ -1,4 +1,3 @@
-package Phase3;
 
 import java.sql.Timestamp;
 import java.util.Objects;
