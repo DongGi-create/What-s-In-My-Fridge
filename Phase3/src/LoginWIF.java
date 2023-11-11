@@ -6,6 +6,34 @@ import java.util.Scanner;
 public class LoginWIF {
 	private static Scanner keyboard = new Scanner(System.in);
 
+	// 첫 화면에서 로그인할지 회원가입할지 선택
+	public static Users initialPage(Connection conn) {
+		int select = 0;
+		Users user = null;
+		Scanner keyboard = new Scanner(System.in);
+
+		do {
+			try {
+				System.out.println("1. 로그인 2. 회원가입, 3.종료");
+				select = keyboard.nextInt();
+				if (select == 1) {
+					user = LoginWIF.loginAccount(conn);
+					if (user != null) {
+						System.out.println(user.getUser_ID() + "님 환영합니다.");
+						break;
+					} else
+						System.out.println("해당하는 유저가 존재하지 않습니다.");
+					System.out.println();
+				} else if (select == 2)
+					LoginWIF.SignUpAccount(conn);
+			} catch (InputMismatchException e) {
+				System.out.println("1, 2, 3 중에 선택해주세요.");
+			}
+
+		} while (select != 3);
+		return user;
+	}
+
 	// 로그인
 	public static Users loginAccount(Connection conn) {
 		String id;
