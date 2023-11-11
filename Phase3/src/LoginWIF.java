@@ -1,34 +1,10 @@
 
 import java.sql.*;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class LoginWIF {
 	private static Scanner keyboard = new Scanner(System.in);
-
-	// 첫 화면에서 로그인할지 회원가입할지 선택
-	public static Users initialPage(Connection conn) {
-		int select;
-		Users user = null;
-		Scanner keyboard = new Scanner(System.in);
-
-		do {
-			System.out.println("1. 로그인 2. 회원가입, 3.종료");
-			select = keyboard.nextInt();
-			if (select == 1) {
-				user = loginAccount(conn);
-				if (user != null) {
-					System.out.println(user.getUser_ID() + "님 환영합니다.");
-					break;
-				} else
-					System.out.println("해당하는 유저가 존재하지 않습니다.");
-				System.out.println();
-			}
-			if (select == 2)
-				SignUpAccount(conn);
-
-		} while (select != 3);
-		return user;
-	}
 
 	// 로그인
 	public static Users loginAccount(Connection conn) {
@@ -38,7 +14,6 @@ public class LoginWIF {
 
 		try {
 			String query = "SELECT * FROM USERS U WHERE U.user_ID = ? AND U.password = ?";
-			;
 			PreparedStatement pstmt = conn.prepareStatement(query);
 			ResultSet rs = null;
 
@@ -72,7 +47,7 @@ public class LoginWIF {
 		String name = null;
 		String email = null;
 		Date birth = null;
-		char sex;
+		char sex = 0;
 		boolean isExisting = true;
 
 		try {
@@ -110,17 +85,36 @@ public class LoginWIF {
 			System.out.print("Email을 입력하세요: ");
 			email = (keyboard.next());
 
-			int y, m, d;
-			System.out.println("생년월일을 입력하세요.");
-			System.out.print("년: ");
-			y = keyboard.nextInt();
-			System.out.print("월: ");
-			m = keyboard.nextInt();
-			System.out.print("일: ");
-			d = keyboard.nextInt();
-			birth = new Date(y, m, d);
-			System.out.print("성별을 입력하세요: ");
-			sex = keyboard.next().charAt(0);
+			int y = 0, m = 0, d = 0;
+			do {
+				try {
+					System.out.println("생년월일을 입력하세요.");
+					System.out.print("년: ");
+					y = keyboard.nextInt();
+					System.out.print("월: ");
+					m = keyboard.nextInt();
+					System.out.print("일: ");
+					d = keyboard.nextInt();
+					birth = new Date(y, m, d);
+				} catch (InputMismatchException e) {
+					System.out.println("숫자만 입력해주세요.");
+				}
+			} while (y > 1900 && m >= 1 && m <= 12 && d >= 1 && d <= 31);
+
+			int sexSelect = 0;
+			do {
+				try {
+					System.out.println("성별을 선택하세요.");
+					System.out.println("1. 남자  2. 여자");
+					sexSelect = keyboard.nextInt();
+					if (sexSelect == 1)
+						sex = 'M';
+					if (sexSelect == 2)
+						sex = 'F';
+				} catch (InputMismatchException e) {
+					System.out.println("1과 2 중에 입력 좀");
+				}
+			} while (sexSelect == 1 || sexSelect == 2);
 
 			pstmt.setString(1, id);
 			pstmt.setString(2, pw);
