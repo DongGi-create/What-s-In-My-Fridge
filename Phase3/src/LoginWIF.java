@@ -28,6 +28,7 @@ public class LoginWIF {
 					LoginWIF.SignUpAccount(conn);
 			} catch (InputMismatchException e) {
 				System.out.println("1, 2, 3 중에 선택해주세요.");
+				keyboard.nextLine();
 			}
 
 		} while (select != 3);
@@ -141,6 +142,7 @@ public class LoginWIF {
 						sex = 'F';
 				} catch (InputMismatchException e) {
 					System.out.println("1과 2 중에 입력 좀");
+					keyboard.nextLine();
 				}
 			} while (sexSelect == 1 || sexSelect == 2);
 
