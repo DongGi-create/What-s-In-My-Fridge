@@ -12,8 +12,10 @@ public class Phase3JDBC {
 		Users user = null;
 		JDBCDriver.load();
 		conn = JDBCDriver.getConnection(URL, DB_ID, DB_PW);
+
 		user = LoginWIF.initialPage(conn);
-		System.out.println(user);
+		UserPages.mainPage(conn, user);
+
 		JDBCDriver.close(conn);
 	}
 }
