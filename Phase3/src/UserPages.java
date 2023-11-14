@@ -21,7 +21,7 @@ public class UserPages
 				select = keyboard.nextInt();
 				if (select == 1)
 				{
-
+					searchPage(conn);
 				}
 				else if (select == 2)
 				{
@@ -66,7 +66,7 @@ public class UserPages
 				}
 				else if (select == 3)
 				{
-
+					searchRecipe(conn);
 				}
 			} catch (InputMismatchException e)
 			{
