@@ -39,13 +39,19 @@ public class UserPages
 				{
 
 				}
-			} catch (InputMismatchException e)
+				else
+				{
+					System.out.println("1, 2, 3, 4, 5 중에 선택해주세요.");
+					keyboard.nextLine();
+				}
+			}
+			catch (InputMismatchException e)
 			{
 				System.out.println("1, 2, 3, 4, 5 중에 선택해주세요.");
 				keyboard.nextLine();
 			}
 
-		} while (select != 4);
+		} while (select != 5);
 	}
 
 	public static void searchPage(Connection conn)
@@ -73,7 +79,13 @@ public class UserPages
 				{
 					searchRecipe(conn);
 				}
-			} catch (InputMismatchException e)
+				else
+				{
+					System.out.println("1, 2, 3, 4 중에 선택해주세요.");
+					keyboard.nextLine();
+				}
+			}
+			catch (InputMismatchException e)
 			{
 				System.out.println("1, 2, 3, 4 중에 선택해주세요.");
 				keyboard.nextLine();
@@ -118,11 +130,13 @@ public class UserPages
 				rs.close();
 				pstmt.close();
 
-			} catch (InputMismatchException e)
+			}
+			catch (InputMismatchException e)
 			{
-				System.out.println("1, 2, 3, 4 중에 선택해주세요.");
+				System.out.println("1, 2, 3, 4, 5 중에 선택해주세요.");
 				keyboard.nextLine();
-			} catch (SQLException e)
+			}
+			catch (SQLException e)
 			{
 				e.printStackTrace();
 			}
@@ -154,11 +168,13 @@ public class UserPages
 				rs.close();
 				pstmt.close();
 
-			} catch (InputMismatchException e)
+			}
+			catch (InputMismatchException e)
 			{
 				System.out.println("1~" + c.size() + " 중에 선택해주세요.");
 				keyboard.nextLine();
-			} catch (SQLException e)
+			}
+			catch (SQLException e)
 			{
 				e.printStackTrace();
 			}
@@ -193,9 +209,15 @@ public class UserPages
 				{
 
 				}
-			} catch (InputMismatchException e)
+				else
+				{
+					System.out.println("1, 2, 3, 4, 5 중에 선택해주세요.");
+					keyboard.nextLine();
+				}
+			}
+			catch (InputMismatchException e)
 			{
-				System.out.println("1, 2, 3, 4 중에 선택해주세요.");
+				System.out.println("1, 2, 3, 4, 5 중에 선택해주세요.");
 				keyboard.nextLine();
 			}
 
