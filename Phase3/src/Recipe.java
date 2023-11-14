@@ -190,7 +190,8 @@ public class Recipe
 
 			rs.close();
 			pstmt.close();
-		} catch (SQLException e)
+		}
+		catch (SQLException e)
 		{
 			e.printStackTrace();
 		}
