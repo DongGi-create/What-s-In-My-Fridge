@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 public class Phase3JDBC {
 	public static final String URL = "jdbc:oracle:thin:@localhost:1521:orcl";
-	public static final String DB_ID = "WIF";
+	public static final String DB_ID = "knu";
 	public static final String DB_PW = "comp322";
 
 	public static void main(String[] args) {
