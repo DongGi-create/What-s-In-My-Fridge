@@ -6,29 +6,41 @@ import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-public class UserPages {
+public class UserPages
+{
 
-	public static void mainPage(Connection conn, Users user) {
+	public static void mainPage(Connection conn, Users user)
+	{
 		if (user == null)
 			return;
 		int select = 0;
 		Scanner keyboard = new Scanner(System.in);
 
 		System.out.println(user.getUser_ID() + "님 환영합니다.");
-		do {
-			try {
+		do
+		{
+			try
+			{
 				System.out.println("1. 요리, 레시피 검색 2. 냉장고 관리 3. 나의 정보 4. 레시피 작성 5. 종료");
 				select = keyboard.nextInt();
-				if (select == 1) {
+				if (select == 1)
+				{
 					searchPage(conn);
-				} else if (select == 2) {
-
-				} else if (select == 3) {
-
-				} else if (select == 4) {
+				}
+				else if (select == 2)
+				{
 
 				}
-			} catch (InputMismatchException e) {
+				else if (select == 3)
+				{
+
+				}
+				else if (select == 4)
+				{
+
+				}
+			} catch (InputMismatchException e)
+			{
 				System.out.println("1, 2, 3, 4, 5 중에 선택해주세요.");
 				keyboard.nextLine();
 			}
@@ -36,24 +48,33 @@ public class UserPages {
 		} while (select != 4);
 	}
 
-	public static void searchPage(Connection conn) {
+	public static void searchPage(Connection conn)
+	{
 		System.out.println("[요리, 레시피 검색]");
 		int select = 0;
 		Scanner keyboard = new Scanner(System.in);
 
-		do {
-			try {
+		do
+		{
+			try
+			{
 				System.out.println("1. 레시피 추천 받기 2. 요리 검색 3. 레시피 검색 4. 뒤로");
 				select = keyboard.nextInt();
-				if (select == 1) {
+				if (select == 1)
+				{
 
-				} else if (select == 2) {
+				}
+				else if (select == 2)
+				{
 					searchCuisine(conn);
 
-				} else if (select == 3) {
+				}
+				else if (select == 3)
+				{
 					searchRecipe(conn);
 				}
-			} catch (InputMismatchException e) {
+			} catch (InputMismatchException e)
+			{
 				System.out.println("1, 2, 3, 4 중에 선택해주세요.");
 				keyboard.nextLine();
 			}
@@ -77,39 +98,44 @@ public class UserPages {
 				cuisineName = keyboard.nextLine();
 				System.out.println("1. 한식 2. 양식 3. 일식 4. 중식 5. 선택안함");
 				select = keyboard.nextInt();
-				
+
 				String query = "SELECT * FROM CUISINE C WHERE C.CUISINE_NAME LIKE ? AND C.CATEGORY LIKE ?";
 				PreparedStatement pstmt = conn.prepareStatement(query);
 				ResultSet rs = null;
-				
-				String[] category = {"한식", "양식", "일식", "중식", ""};
+
+				String[] category =
+				{ "한식", "양식", "일식", "중식", "" };
 				pstmt.setString(1, "%" + cuisineName + "%");
-				pstmt.setString(2, "%" + category[0<select && select<5 ? select-1 : 4] + "%");
-				
+				pstmt.setString(2, "%" + category[0 < select && select < 5 ? select - 1 : 4] + "%");
+
 				rs = pstmt.executeQuery();
-				while(rs.next()) {
+				while (rs.next())
+				{
 					Cuisines.add(new Cuisine(rs));
-					System.out.println(Cuisines.size()+". "+rs.getString(2) + "|"+ rs.getString(3));
+					System.out.println(Cuisines.size() + ". " + rs.getString(2) + "|" + rs.getString(3));
 				}
 				getRecipe(conn, Cuisines);
 				rs.close();
 				pstmt.close();
-				
-			} catch (InputMismatchException e){
+
+			} catch (InputMismatchException e)
+			{
 				System.out.println("1, 2, 3, 4 중에 선택해주세요.");
 				keyboard.nextLine();
-			} catch (SQLException e) {
+			} catch (SQLException e)
+			{
 				e.printStackTrace();
 			}
-		} while(!(0<select && select<5));
+		} while (!(0 < select && select < 5));
 
 	}
 
-	public static void getRecipe(Connection conn, ArrayList<Cuisine> c) {
+	public static void getRecipe(Connection conn, ArrayList<Cuisine> c)
+	{
 		int select = 0;
 		Scanner keyboard = new Scanner(System.in);
 		ArrayList<Recipe> recipes = new ArrayList<>();
-		
+
 		do
 		{
 			try
@@ -119,26 +145,26 @@ public class UserPages {
 				String query = "SELECT * FROM RECIPE R WHERE R.CUISINE_ID = ?";
 				PreparedStatement pstmt = conn.prepareStatement(query);
 				pstmt.setInt(1, c.get(select - 1).getCuisine_ID());
-				ResultSet rs = null;
-				
-				rs = pstmt.executeQuery();
-				System.out.println(c.get(select - 1).getCuisine_Name());
-				while(rs.next()) {
+				ResultSet rs = pstmt.executeQuery();
+				while (rs.next())
+				{
 					recipes.add(new Recipe(rs));
-					System.out.println(recipes.size()+". " + rs.getString(3));
+					recipes.get(recipes.size() - 1).showRecipe(conn);
 				}
 				rs.close();
 				pstmt.close();
-				
-			} catch (InputMismatchException e){
-				System.out.println("1~"+c.size()+" 중에 선택해주세요.");
+
+			} catch (InputMismatchException e)
+			{
+				System.out.println("1~" + c.size() + " 중에 선택해주세요.");
 				keyboard.nextLine();
-			} catch (SQLException e) {
+			} catch (SQLException e)
+			{
 				e.printStackTrace();
 			}
-		} while(!(0 < select && select <= c.size()));		
+		} while (!(0 < select && select <= c.size()));
 	}
-	
+
 	public static void searchRecipe(Connection conn)
 	{
 		System.out.println("[레시피 검색]");
@@ -153,7 +179,7 @@ public class UserPages {
 				select = keyboard.nextInt();
 				if (select == 1)
 				{
-					
+
 				}
 				else if (select == 2)
 				{
