@@ -1,21 +1,25 @@
 
 import java.sql.Date;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Objects;
+
+import oracle.sql.INTERVALDS;
 
 public class Recipe {
 	private int recipe_ID;
 	private int cuisine_ID;
 	private String title;
 	private String writer_ID;
-	private Date cooking_Time;
+	private INTERVALDS cooking_Time;
 	private int level_NM;
 	private String qnt;
 	private String content;
 	private String link;
 	private Timestamp write_Time;
 
-	public Recipe(int recipe_ID, int cuisine_ID, String title, String writer_ID, Date cooking_Time, int level_NM,
+	public Recipe(int recipe_ID, int cuisine_ID, String title, String writer_ID, INTERVALDS cooking_Time, int level_NM,
 			String qnt, String content, String link, Timestamp write_Time) {
 		this.recipe_ID = recipe_ID;
 		this.cuisine_ID = cuisine_ID;
@@ -29,6 +33,19 @@ public class Recipe {
 		this.write_Time = write_Time;
 	}
 
+	public Recipe(ResultSet rs) throws SQLException {
+		this.recipe_ID = rs.getInt(1);
+		this.cuisine_ID = rs.getInt(2);
+		this.title = rs.getString(3);
+		this.writer_ID = rs.getString(4);
+		this.cooking_Time = (INTERVALDS) rs.getObject(5); 
+		this.level_NM = rs.getInt(6);
+		this.qnt = rs.getString(7);
+		this.content = rs.getString(8);
+		this.link = rs.getString(9);
+		this.write_Time = rs.getTimestamp(10);
+	}
+	
 	public int getRecipe_ID() {
 		return recipe_ID;
 	}
@@ -61,11 +78,11 @@ public class Recipe {
 		this.writer_ID = writer_ID;
 	}
 
-	public Date getCooking_Time() {
+	public INTERVALDS getCooking_Time() {
 		return cooking_Time;
 	}
 
-	public void setCooking_Time(Date cooking_Time) {
+	public void setCooking_Time(INTERVALDS cooking_Time) {
 		this.cooking_Time = cooking_Time;
 	}
 

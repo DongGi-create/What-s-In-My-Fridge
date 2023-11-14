@@ -1,4 +1,6 @@
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Objects;
 
 public class Cuisine {
@@ -12,6 +14,12 @@ public class Cuisine {
 		this.category = category;
 	}
 
+	public Cuisine(ResultSet rs) throws SQLException {
+		this.cuisine_ID = rs.getInt(1);
+		this.cuisine_Name = rs.getString(2);
+		this.category = rs.getString(3);
+	}
+	
 	public int getCuisine_ID() {
 		return cuisine_ID;
 	}
