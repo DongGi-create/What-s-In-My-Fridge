@@ -195,9 +195,8 @@ public class Recipe
 			e.printStackTrace();
 		}
 
-		System.out.println("요리 시간: " + cooking_Time + "   난이도: " + level_NM + "   양: " + qnt);
-		System.out.println();
+		System.out.println("요리 시간: " + cooking_Time + "   난이도: " + level_NM + "   양: " + qnt + "\n");
 		System.out.println(content);
-		System.out.println("참고 링크: " + link);
+		System.out.println("참고 링크: " + link + "\n");
 	}
 }
