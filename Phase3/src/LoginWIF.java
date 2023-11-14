@@ -128,7 +128,7 @@ public class LoginWIF {
 				} catch (InputMismatchException e) {
 					System.out.println("숫자만 입력해주세요.");
 				}
-			} while (y > 1900 && m >= 1 && m <= 12 && d >= 1 && d <= 31);
+			} while (!(y > 1900 && m >= 1 && m <= 12 && d >= 1 && d <= 31));
 
 			int sexSelect = 0;
 			do {
