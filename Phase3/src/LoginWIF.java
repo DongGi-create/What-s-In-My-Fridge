@@ -144,7 +144,7 @@ public class LoginWIF {
 					System.out.println("1과 2 중에 입력 좀");
 					keyboard.nextLine();
 				}
-			} while (sexSelect == 1 || sexSelect == 2);
+			} while (!(sexSelect == 1 || sexSelect == 2));
 
 			pstmt.setString(1, id);
 			pstmt.setString(2, pw);
