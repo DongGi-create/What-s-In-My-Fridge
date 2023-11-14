@@ -3,52 +3,71 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Objects;
 
-public class Cuisine {
+public class Cuisine
+{
 	private int cuisine_ID;
 	private String cuisine_Name;
 	private String category;
 
-	public Cuisine(int cuisine_ID, String cuisine_Name, String category) {
+	public Cuisine(int cuisine_ID, String cuisine_Name, String category)
+	{
 		this.cuisine_ID = cuisine_ID;
 		this.cuisine_Name = cuisine_Name;
 		this.category = category;
 	}
 
-	public Cuisine(ResultSet rs) throws SQLException {
-		this.cuisine_ID = rs.getInt(1);
-		this.cuisine_Name = rs.getString(2);
-		this.category = rs.getString(3);
+	public Cuisine(ResultSet rs)
+	{
+		try
+		{
+			this.cuisine_ID = rs.getInt(1);
+			this.cuisine_Name = rs.getString(2);
+			this.category = rs.getString(3);
+		}
+		catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
+
 	}
-	
-	public int getCuisine_ID() {
+
+	public int getCuisine_ID()
+	{
 		return cuisine_ID;
 	}
 
-	public void setCuisine_ID(int cuisine_ID) {
+	public void setCuisine_ID(int cuisine_ID)
+	{
 		this.cuisine_ID = cuisine_ID;
 	}
 
-	public String getCuisine_Name() {
+	public String getCuisine_Name()
+	{
 		return cuisine_Name;
 	}
 
-	public void setCuisine_Name(String cuisine_Name) {
+	public void setCuisine_Name(String cuisine_Name)
+	{
 		this.cuisine_Name = cuisine_Name;
 	}
 
-	public String getCategory() {
+	public String getCategory()
+	{
 		return category;
 	}
 
-	public void setCategory(String category) {
+	public void setCategory(String category)
+	{
 		this.category = category;
 	}
 
-	public String toString() {
+	public String toString()
+	{
 		return "Cuisine [cuisine_ID=" + cuisine_ID + ", cuisine_Name=" + cuisine_Name + ", category=" + category + "]";
 	}
 
-	public boolean equals(Object obj) {
+	public boolean equals(Object obj)
+	{
 		if (this == obj)
 			return true;
 		if (obj == null)

@@ -1,8 +1,11 @@
 
 import java.sql.Date;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Objects;
 
-public class Users {
+public class Users
+{
 	private String user_ID;
 	private String password;
 	private String name;
@@ -10,7 +13,8 @@ public class Users {
 	private Date birth;
 	private char sex;
 
-	public Users(String user_ID, String user_PW, String name, String email, Date birth, char sex) {
+	public Users(String user_ID, String user_PW, String name, String email, Date birth, char sex)
+	{
 		this.user_ID = user_ID;
 		this.password = user_PW;
 		this.name = name;
@@ -19,60 +23,91 @@ public class Users {
 		this.sex = sex;
 	}
 
-	public String getUser_ID() {
+	public Users(ResultSet rs)
+	{
+		try
+		{
+			user_ID = rs.getString(1);
+			password = rs.getString(2);
+			name = rs.getString(3);
+			email = rs.getString(4);
+			birth = rs.getDate(5);
+			sex = rs.getString(6).charAt(0);
+		}
+		catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	public String getUser_ID()
+	{
 		return user_ID;
 	}
 
-	public void setUser_ID(String user_ID) {
+	public void setUser_ID(String user_ID)
+	{
 		this.user_ID = user_ID;
 	}
 
-	public String getPassword() {
+	public String getPassword()
+	{
 		return password;
 	}
 
-	public void setPassword(String password) {
+	public void setPassword(String password)
+	{
 		this.password = password;
 	}
 
-	public String getName() {
+	public String getName()
+	{
 		return name;
 	}
 
-	public void setName(String name) {
+	public void setName(String name)
+	{
 		this.name = name;
 	}
 
-	public String getEmail() {
+	public String getEmail()
+	{
 		return email;
 	}
 
-	public void setEmail(String email) {
+	public void setEmail(String email)
+	{
 		this.email = email;
 	}
 
-	public Date getBirth() {
+	public Date getBirth()
+	{
 		return birth;
 	}
 
-	public void setBirth(Date birth) {
+	public void setBirth(Date birth)
+	{
 		this.birth = birth;
 	}
 
-	public char getSex() {
+	public char getSex()
+	{
 		return sex;
 	}
 
-	public void setSex(char sex) {
+	public void setSex(char sex)
+	{
 		this.sex = sex;
 	}
 
-	public String toString() {
+	public String toString()
+	{
 		return "Users [user_ID=" + user_ID + ", password=" + password + ", name=" + name + ", email=" + email
 				+ ", birth=" + birth + ", sex=" + sex + "]";
 	}
 
-	public boolean equals(Object obj) {
+	public boolean equals(Object obj)
+	{
 		if (this == obj)
 			return true;
 		if (obj == null)
