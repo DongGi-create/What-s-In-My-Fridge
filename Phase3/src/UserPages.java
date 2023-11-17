@@ -98,7 +98,7 @@ public class UserPages
 				select = keyboard.nextInt();
 				if (select == 1)
 				{
-
+					
 				}
 				else if (select == 2)
 				{
@@ -410,5 +410,185 @@ public class UserPages
 				keyboard.nextLine();
 			}
 		} while (!(0 < select && select <= r.size()));
+	}
+	
+	public static void statsPage(Connection conn) {
+		int select = 0;
+		Scanner keyboard = new Scanner(System.in);
+		
+		do
+		{
+			try {
+				System.out.println("[통계 분석 페이지]");
+				System.out.println("1. 비활동유저 비율 2. 유저 연령 분포 3. 활발한 유저 랭킹 4. 뒤로");
+				select = keyboard.nextInt();
+				
+				if (select == 1) 
+					getInactiveUserRatio(conn);
+				else if (select == 2)
+					getUserAgeDistribution(conn);
+				else if (select == 3)
+					getActiveUserRanking(conn);
+				
+			} catch (InputMismatchException e) {
+				System.out.println("1~4 중에 선택해주세요.");
+				keyboard.nextLine();
+			}
+		} while (select != 4);
+	}
+	
+	public static void getInactiveUserRatio(Connection conn) {
+		//Phase2 - Q9 활용. Order by 절을 없애고 집계함수로 변경.
+		String sql1 = "SELECT\r\n"
+				+ "	count(U.USER_ID) as inactives\r\n"
+				+ "FROM\r\n"
+				+ "	USERS U\r\n"
+				+ "WHERE\r\n"
+				+ "	NOT EXISTS (\r\n"
+				+ "		SELECT\r\n"
+				+ "			*\r\n"
+				+ "		FROM\r\n"
+				+ "			RECIPE R\r\n"
+				+ "		WHERE\r\n"
+				+ "			R.WRITER_ID = U.USER_ID\r\n"
+				+ "	)";
+		String sql2 = "SELECT COUNT(*) as total FROM USERS";
+		
+		try {
+			Statement stmt = conn.createStatement();
+			int inactives = 0, total = 0;
+			ResultSet rs1 = stmt.executeQuery(sql1);
+			if(rs1.next()) 
+				inactives = rs1.getInt(1);
+			ResultSet rs2 = stmt.executeQuery(sql2);
+			if(rs2.next())
+				total = rs2.getInt(1);
+			//System.out.println(""+inactives+" "+total);
+			
+			if (total < 1)
+				System.out.println("아직 회원이 없어요 ㅠㅠ");
+			else 
+				System.out.println(inactives/(float)total*100+"%의 회원님들이 아직 활동을 안하셨어요! 다같이 힘내봐요!");
+			
+			rs1.close(); rs2.close(); stmt.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void getUserAgeDistribution(Connection conn) {
+		//Phase2 - Q13 활용. 정렬기준 변경.
+		String sql = "SELECT\r\n"
+				+ "	AGE_GROUP,\r\n"
+				+ "	COUNT(*) CNT\r\n"
+				+ "FROM\r\n"
+				+ "	(\r\n"
+				+ "		SELECT\r\n"
+				+ "			CASE\r\n"
+				+ "			    WHEN Age < 10              THEN\r\n"
+				+ "			        '9세 이하'\r\n"
+				+ "			    WHEN Age BETWEEN 10 AND 19 THEN\r\n"
+				+ "			        '10대'\r\n"
+				+ "			    WHEN Age BETWEEN 20 AND 29 THEN\r\n"
+				+ "			        '20대'\r\n"
+				+ "			    WHEN Age BETWEEN 30 AND 39 THEN\r\n"
+				+ "			        '30대'\r\n"
+				+ "			    WHEN Age BETWEEN 40 AND 49 THEN\r\n"
+				+ "			        '40대'\r\n"
+				+ "			    WHEN Age BETWEEN 50 AND 59 THEN\r\n"
+				+ "			        '50대'\r\n"
+				+ "			    WHEN Age >= 60             THEN\r\n"
+				+ "			        '60대 이상'\r\n"
+				+ "			END AS AGE_GROUP\r\n"
+				+ "		FROM\r\n"
+				+ "			(\r\n"
+				+ "				SELECT\r\n"
+				+ "					User_ID,\r\n"
+				+ "					Sex,\r\n"
+				+ "					Birth,\r\n"
+				+ "					TRUNC(MONTHS_BETWEEN(TRUNC(SYSDATE),\r\n"
+				+ "					                     BIRTH) / 12) AS Age\r\n"
+				+ "				FROM\r\n"
+				+ "					USERS\r\n"
+				+ "			)\r\n"
+				+ "	)\r\n"
+				+ "GROUP BY\r\n"
+				+ "	AGE_GROUP\r\n"
+				+ "ORDER BY\r\n"
+				+ "	AGE_GROUP ASC";
+		
+		try {
+			Statement stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery(sql);
+			while (rs.next()) {
+				String groupName = rs.getString(1);
+				int cnt = rs.getInt(2);
+				System.out.println(groupName+": "+cnt+"명");
+			}
+			rs.close(); stmt.close();
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void getActiveUserRanking(Connection conn) {
+		//Phase2 - Q14 활용. 가장 높은 사람의 id를 출력하는게 아닌 상위 10명의 이름을 출력하도록 수정.
+		String sql = "SELECT\r\n"
+				+ "	name, S\r\n"
+				+ "FROM\r\n"
+				+ "	(\r\n"
+				+ "		SELECT\r\n"
+				+ "			SUM(Ccnt + Fcnt) AS S,\r\n"
+				+ "			T1.id\r\n"
+				+ "		FROM\r\n"
+				+ "			     (\r\n"
+				+ "				SELECT\r\n"
+				+ "					COUNT(*)  AS Ccnt,\r\n"
+				+ "					C.User_id AS id\r\n"
+				+ "				FROM\r\n"
+				+ "					COMMENTS C\r\n"
+				+ "				GROUP BY\r\n"
+				+ "					C.User_id\r\n"
+				+ "			) T1\r\n"
+				+ "			JOIN (\r\n"
+				+ "				SELECT\r\n"
+				+ "					COUNT(*)       AS Fcnt,\r\n"
+				+ "					F.Like_user_id AS id\r\n"
+				+ "				FROM\r\n"
+				+ "					FAVORITE F\r\n"
+				+ "				GROUP BY\r\n"
+				+ "					F.Like_user_id\r\n"
+				+ "			) T2 ON T1.id = T2.id\r\n"
+				+ "		GROUP BY\r\n"
+				+ "			T1.id\r\n"
+				+ "		ORDER BY\r\n"
+				+ "			S DESC\r\n"
+				+ "	),\r\n"
+				+ "    USERS\r\n"
+				+ "WHERE\r\n"
+				+ " id = User_ID and\r\n"
+				+ "	ROWNUM <= 10";
+		
+		try {
+			Statement stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery(sql);
+			System.out.println("좋아요를 표시한 횟수, 댓글을 작성한 횟수를 기반으로 산출된 순위입니다!");
+			int rank = 1;
+			if (!rs.isBeforeFirst()) // resultset이 비었을때 false 반환
+				System.out.println("아직 회원이 없어요 ㅠㅠ");
+			else {
+				while (rs.next()) {
+					String userName = rs.getString(1);
+					int score = rs.getInt(2);
+					
+					System.out.println(rank+"위! 총 "+score+"점의 "+userName+"님!");
+					
+					rank++;
+				}
+			}
+			rs.close(); stmt.close();
+		} catch(SQLException e) {
+			e.printStackTrace();
+		}
 	}
 }
