@@ -2,6 +2,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -191,36 +192,92 @@ public class UserPages
 		{
 			try
 			{
-				System.out.println("1. 제목으로 검색 2. 내용으로 검색 3. 글쓴이로 검색 4. 댓글로 검색 5. 뒤로");
+				System.out.println("1. 제목으로 검색 2. 내용으로 검색 3. 글쓴이로 검색 4. 뒤로");
 				select = keyboard.nextInt();
 				if (select == 1)
 				{
-
+					String query = "SELECT * FROM RECIPE R WHERE R.title Like \'%";
+					retrieveRecipe(conn, "제목으로 검색합니다", query);
 				}
 				else if (select == 2)
 				{
-
+					String query = "SELECT * FROM RECIPE R WHERE R.content Like \'%";
+					retrieveRecipe(conn, "내용으로 검색합니다", query);
 				}
 				else if (select == 3)
 				{
-
-				} // Q10
+					String query = "SELECT * FROM RECIPE R, USERS U WHERE R.Writer_ID = U.User_ID AND U.Name Like \'%";
+					retrieveRecipe(conn, "글쓴이로 검색합니다", query);
+				}
 				else if (select == 4)
 				{
 
 				}
 				else
 				{
-					System.out.println("1, 2, 3, 4, 5 중에 선택해주세요.");
+					System.out.println("1, 2, 3, 4 중에 선택해주세요.");
 					keyboard.nextLine();
 				}
 			}
 			catch (InputMismatchException e)
 			{
-				System.out.println("1, 2, 3, 4, 5 중에 선택해주세요.");
+				System.out.println("1, 2, 3, 4 중에 선택해주세요.");
 				keyboard.nextLine();
 			}
 
-		} while (select != 4);
+		} while (!(0 < select && select < 5));
+	}
+	
+	
+	
+	public static void retrieveRecipe(Connection conn, String text, String query)
+	{
+		
+		Scanner keyboard = new Scanner(System.in);
+		System.out.println(text);
+		String keyword = keyboard.nextLine();
+		query = query + keyword + "%\'";
+		ArrayList<Recipe> recipes = new ArrayList<>();
+		Statement stmt;
+		try {
+			stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery(query);
+			
+			while (rs.next())
+			{
+				recipes.add(new Recipe(rs));
+				System.out.println(recipes.size() + ". " + rs.getString(3));
+			}
+			if(recipes.size()==0) {
+				System.out.println("해당되는 결과가 존재하지 않습니다..");
+				return;
+			}
+			getDetailRecipe(conn, recipes);
+			rs.close();
+			stmt.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static void getDetailRecipe(Connection conn, ArrayList<Recipe> r)
+	{
+		int select = 0;
+		Scanner keyboard = new Scanner(System.in);
+		
+		do
+		{
+			try
+			{
+				System.out.println("자세히 보고 싶으신 레시피 번호를 입력해주세요");
+				select = keyboard.nextInt();
+				r.get(select - 1).showRecipe(conn);
+			}
+			catch (InputMismatchException e)
+			{
+				System.out.println("1~" + r.size() + " 중에 선택해주세요.");
+				keyboard.nextLine();
+			}
+		} while (!(0 < select && select <= r.size()));
 	}
 }
