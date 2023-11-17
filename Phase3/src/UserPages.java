@@ -18,10 +18,37 @@ public class UserPages
 		Scanner keyboard = new Scanner(System.in);
 
 		System.out.println(user.getUser_ID() + "님 환영합니다.");
+		
+		String Q10 = "SELECT\r\n"
+				+ "   U.User_id\r\n"
+				+ "FROM\r\n"
+				+ "   USERS U\r\n"
+				+ "WHERE\r\n"
+				+ "   EXISTS (\r\n"
+				+ "      SELECT\r\n"
+				+ "         *\r\n"
+				+ "      FROM\r\n"
+				+ "         COMMENTS C\r\n"
+				+ "      WHERE\r\n"
+				+ "         c.User_id = U.User_id\r\n"
+				+ "   )";
+		
 		do
 		{
 			try
 			{
+				Statement stmt = conn.createStatement();
+				ResultSet rs = stmt.executeQuery(Q10);
+				boolean noComment = true;
+				while(rs.next()) {
+					if(user.getUser_ID().equals(rs.getString(1)))noComment = false;
+				}
+				if(noComment) {
+					System.out.println("아직 댓글을 한번도 쓰지 않으셨어요.!! 한번 써보시는건 어떠신가요?");
+				}
+				else {
+					System.out.println("댓글을 써보셨군요!! 앞으로도 잘 부탁드립니다.!");
+				}
 				System.out.println("1. 요리, 레시피 검색 2. 냉장고 관리 3. 나의 정보 4. 레시피 작성 5. 종료");
 				select = keyboard.nextInt();
 				if (select == 1)
@@ -50,6 +77,8 @@ public class UserPages
 			{
 				System.out.println("1, 2, 3, 4, 5 중에 선택해주세요.");
 				keyboard.nextLine();
+			} catch (SQLException e) {
+				e.printStackTrace();
 			}
 
 		} while (select != 5);
