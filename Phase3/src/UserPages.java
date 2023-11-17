@@ -127,7 +127,12 @@ public class UserPages
 					Cuisines.add(new Cuisine(rs));
 					System.out.println(Cuisines.size() + ". " + rs.getString(2) + "|" + rs.getString(3));
 				}
-				getRecipe(conn, Cuisines);
+				if(Cuisines.size()==0) {
+					System.out.println("검색 결과가 없습니다..");
+				}
+				else {
+					getRecipe(conn, Cuisines);
+				}
 				rs.close();
 				pstmt.close();
 
@@ -158,16 +163,72 @@ public class UserPages
 				System.out.println("원하시는 요리를 선택하세요 (레시피 보여드립니다)");
 				select = keyboard.nextInt();
 				String query = "SELECT * FROM RECIPE R WHERE R.CUISINE_ID = ?";
+				String Q5 = "SELECT\r\n"
+						+ "   U.NAME\r\n"
+						+ "FROM\r\n"
+						+ "   USERS   U,\r\n"
+						+ "   CUISINE C,\r\n"
+						+ "   RECIPE  R\r\n"
+						+ "WHERE\r\n"
+						+ "       U.USER_ID = R.WRITER_ID\r\n"
+						+ "   AND R.CUISINE_ID = C.CUISINE_ID\r\n"
+						+ "   AND C.CUISINE_NAME = ?";
+				String Q11 = "SELECT\r\n"
+						+ "   I.INGREDIENT_NAME\r\n"
+						+ "FROM\r\n"
+						+ "   INGREDIENT I\r\n"
+						+ "WHERE\r\n"
+						+ "   I.INGREDIENT_ID IN (\r\n"
+						+ "      SELECT\r\n"
+						+ "         REQUIRE.INGREDIENT_ID\r\n"
+						+ "      FROM\r\n"
+						+ "         REQUIRE, RECIPE, CUISINE\r\n"
+						+ "      WHERE\r\n"
+						+ "             REQUIRE.RECIPE_ID = RECIPE.RECIPE_ID\r\n"
+						+ "         AND RECIPE.CUISINE_ID = CUISINE.CUISINE_ID\r\n"
+						+ "         AND CUISINE.CUISINE_NAME = ?)";
+				
 				PreparedStatement pstmt = conn.prepareStatement(query);
+				PreparedStatement pstmt5 = conn.prepareStatement(Q5);
+				PreparedStatement pstmt11 = conn.prepareStatement(Q11);
+				
 				pstmt.setInt(1, c.get(select - 1).getCuisine_ID());
+				String selectedCuisineName = c.get(select-1).getCuisine_Name();
+				pstmt5.setString(1, selectedCuisineName);
+				pstmt11.setString(1, selectedCuisineName);
+				
 				ResultSet rs = pstmt.executeQuery();
+				ResultSet rs5 = pstmt5.executeQuery();
+				ResultSet rs11 = pstmt11.executeQuery();
+				
 				while (rs.next())
 				{
 					recipes.add(new Recipe(rs));
 					recipes.get(recipes.size() - 1).showRecipe(conn);
+					
 				}
+				if(recipes.size()==0) {
+					System.out.println("해당 요리의 레시피가 아직 작성되지 않았습니다..");
+				}
+				else {
+					System.out.println("Q5. 해당 요리에 대한 레시피를 작성한 유저의 이름 조회");
+					while (rs5.next())
+					{
+						System.out.println("유저 " + rs5.getString(1));
+					}
+					System.out.println("Q11. "+ selectedCuisineName +"에 필요한 재료 조회");
+					while (rs11.next())
+					{
+						System.out.println("재료 " + rs11.getString(1));
+					}
+
+				}								
+				rs5.close();
+				pstmt5.close();
 				rs.close();
 				pstmt.close();
+				rs11.close();
+				pstmt11.close();
 
 			}
 			catch (InputMismatchException e)
@@ -197,12 +258,14 @@ public class UserPages
 				if (select == 1)
 				{
 					String query = "SELECT * FROM RECIPE R WHERE R.title Like \'%";
-					retrieveRecipe(conn, "제목으로 검색합니다", query);
+					retrieveQ1(conn);
+					retrieveRecipe(conn, "제목을 입력하시면 제목으로 검색합니다", query);
+
 				}
 				else if (select == 2)
 				{
 					String query = "SELECT * FROM RECIPE R WHERE R.content Like \'%";
-					retrieveRecipe(conn, "내용으로 검색합니다", query);
+					retrieveRecipe(conn, "내용을 입력하시면 내용으로 검색합니다", query);
 				}
 				else if (select == 3)
 				{
@@ -228,7 +291,43 @@ public class UserPages
 		} while (!(0 < select && select < 5));
 	}
 	
-	
+	public static void retrieveQ1(Connection conn)
+	{
+		String Q1 = "SELECT\r\n"
+				+ "   R.WRITE_TIME,\r\n"
+				+ "   R.TITLE\r\n"
+				+ "FROM\r\n"
+				+ "   RECIPE R\r\n"
+				+ "WHERE\r\n"
+				+ "   R.TITLE LIKE \'%";
+
+		Scanner keyboard = new Scanner(System.in);
+		System.out.println("레시피 제목을 입력하시면 그 레시피의 작성 시간과 이름을 출력해드립니다.");
+		String keyword = keyboard.nextLine();
+		Q1 = Q1 + keyword + "%\'";
+		Statement stmt;
+		try {
+			stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery(Q1);
+			int count = 0;
+			while (rs.next())
+			{
+				System.out.println("작성시간: "+rs.getString(1)+", 레시피 이름: "+rs.getString(2));
+				count++;
+			}
+			rs.close();
+			stmt.close();
+			if(count == 0) {
+				System.out.println("해당되는 결과가 존재하지 않습니다..");
+				return;
+			}
+		}catch (InputMismatchException e) {
+			System.out.println("레시피 제목을 입력하시면 그 레시피의 작성 시간과 이름을 출력해드립니다 String으로 입력해주세요.");
+			keyboard.nextLine();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 	
 	public static void retrieveRecipe(Connection conn, String text, String query)
 	{
@@ -248,13 +347,16 @@ public class UserPages
 				recipes.add(new Recipe(rs));
 				System.out.println(recipes.size() + ". " + rs.getString(3));
 			}
+			rs.close();
+			stmt.close();
 			if(recipes.size()==0) {
 				System.out.println("해당되는 결과가 존재하지 않습니다..");
 				return;
 			}
 			getDetailRecipe(conn, recipes);
-			rs.close();
-			stmt.close();
+		}catch (InputMismatchException e) {
+			System.out.println("검색할 레시피"+ text + "을 입력해주세요..");
+			keyboard.nextLine();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
