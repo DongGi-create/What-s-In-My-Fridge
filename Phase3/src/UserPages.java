@@ -57,7 +57,7 @@ public class UserPages
 				}
 				else if (select == 2)
 				{
-
+					FridgeManagement.showFridge(conn, user);
 				}
 				else if (select == 3)
 				{
