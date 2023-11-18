@@ -10,6 +10,11 @@ public class Own
 	private int quantity;
 	private String unit;
 
+	public Own()
+	{
+
+	}
+
 	public Own(String user_ID, int ingredient_ID, int quantity, String unit)
 	{
 		this.user_ID = user_ID;
