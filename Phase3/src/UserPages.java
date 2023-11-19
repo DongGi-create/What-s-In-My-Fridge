@@ -80,6 +80,10 @@ public class UserPages
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
+			catch(NullPointerException e)
+			{
+				select = 5;
+			}
 
 		} while (select != 5);
 	}
