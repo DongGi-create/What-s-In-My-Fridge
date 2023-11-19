@@ -16,8 +16,6 @@ public class UserPages
 			return;
 		int select = 0;
 		Scanner keyboard = new Scanner(System.in);
-
-		System.out.println(user.getUser_ID() + "님 환영합니다.");
 		
 		String Q10 = "SELECT\r\n"
 				+ "   U.User_id\r\n"
@@ -67,6 +65,10 @@ public class UserPages
 				{
 
 				}
+				else if(select == 5)
+				{
+					continue;
+				}
 				else
 				{
 					System.out.println("1, 2, 3, 4, 5 중에 선택해주세요.");
@@ -112,6 +114,10 @@ public class UserPages
 				else if (select == 3)
 				{
 					searchRecipe(conn);
+				}
+				else if (select == 4)
+				{
+					continue;
 				}
 				else
 				{
