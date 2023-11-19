@@ -2,6 +2,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -20,7 +21,7 @@ public class Profile
 			{
 				showProfile(user);
 
-				System.out.println("1. 비밀번호 변경 2. 탈퇴하기 3. 뒤로");
+				System.out.println("1. 비밀번호 변경 2. 내가 작성한 레시피 3. 탈퇴하기 4. 뒤로");
 				select = keyboard.nextInt();
 				if (select == 1)
 				{
@@ -28,21 +29,29 @@ public class Profile
 				}
 				else if (select == 2)
 				{
+					showMyRecipes(conn, user);
+				}
+				else if (select == 3)
+				{
 					user = deleteAccount(conn, user);
+				}
+				else if (select == 4)
+				{
+					continue;
 				}
 				else
 				{
-					System.out.println("1, 2, 3 중에 선택해주세요.");
+					System.out.println("1, 2, 3, 4 중에 선택해주세요.");
 					keyboard.nextLine();
 				}
 			}
 			catch (InputMismatchException e)
 			{
-				System.out.println("1, 2 중에 선택해주세요.");
+				System.out.println("1, 2, 3, 4 중에 선택해주세요.");
 				keyboard.nextLine();
 			}
 
-		} while (select != 3);
+		} while (select != 4);
 		return user;
 	}
 
@@ -118,6 +127,65 @@ public class Profile
 		}
 
 		return user;
+	}
+
+	public static void showMyRecipes(Connection conn, Users user)
+	{
+		String q7 = "SELECT\r\n" + "	R.*, (\r\n" + "		SELECT\r\n" + "			C.CUISINE_NAME\r\n"
+				+ "		FROM\r\n" + "			CUISINE C\r\n" + "		WHERE\r\n"
+				+ "			R.CUISINE_ID = C.CUISINE_ID\r\n" + "	) AS CUISINE_NAME\r\n" + "FROM\r\n"
+				+ "	RECIPE R\r\n" + "WHERE\r\n" + "	R.WRITER_ID = ?";
+
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		ArrayList<Recipe> recipes = new ArrayList<>();
+
+		System.out.println("[나의 정보 - 내가 작성한 레시피]");
+		try
+		{
+			pstmt = conn.prepareStatement(q7);
+			pstmt.setString(1, user.getUser_ID());
+			rs = pstmt.executeQuery();
+			while (rs.next())
+			{
+				recipes.add(new Recipe(rs));
+				System.out.println(recipes.size() + ". " + rs.getString(11) + " - " + rs.getString(3));
+			}
+			rs.close();
+			pstmt.close();
+			if (recipes.size() == 0)
+			{
+				System.out.println("아직 작성한 레시피가 없으시네요. 한 번 작성해보세요!");
+				return;
+			}
+			System.out.println("--------------------------------------");
+		}
+		catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
+
+		int select = 0;
+		do
+		{
+			System.out.println("보고 싶은 레시피를 선택해주세요. 0을 입력하면 이전으로 돌아갑니다.");
+			try
+			{
+				select = keyboard.nextInt();
+				if (select < 0 || select > recipes.size())
+				{
+					System.out.println("0~" + recipes.size() + " 사이의 값만 입력해주세요.");
+					continue;
+				}
+				if (select == 0)
+					continue;
+				recipes.get(select - 1).showRecipe(conn);
+			}
+			catch (InputMismatchException e)
+			{
+				System.out.println("0~" + recipes.size() + " 사이의 값만 입력해주세요.");
+			}
+		} while (select != 0);
 	}
 
 	public static Users deleteAccount(Connection conn, Users user)
