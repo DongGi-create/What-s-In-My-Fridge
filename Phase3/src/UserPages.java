@@ -61,7 +61,7 @@ public class UserPages
 				}
 				else if (select == 3)
 				{
-
+					user = Profile.ProfileManagement(conn, user);
 				}
 				else if (select == 4)
 				{
