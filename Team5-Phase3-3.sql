@@ -67,8 +67,8 @@ FROM
 WHERE 
 		U.USER_ID = O.USER_ID 
 	AND O.INGREDIENT_ID = I.INGREDIENT_ID 
-	AND U.USER_ID = ? 
-	AND O.INGREDIENT_ID = ?
+	AND U.USER_ID = 'user1'
+	AND O.INGREDIENT_ID = 29;
 
 -- Type 3: Aggregation + multi-way join with join predicates + with GROUP BY (e.g. TPC-H Q5)
 -- Q6. '밥'이 제목에 들어간 레시피에 각 성별이 단 댓글의 수 조회

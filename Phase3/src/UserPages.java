@@ -47,7 +47,7 @@ public class UserPages
 				else {
 					System.out.println("댓글을 써보셨군요!! 앞으로도 잘 부탁드립니다.!");
 				}
-				System.out.println("1. 요리, 레시피 검색 2. 냉장고 관리 3. 나의 정보 4. 레시피 작성 5. 종료");
+				System.out.println("1. 요리, 레시피 검색 2. 냉장고 관리 3. 나의 정보 4. 사용자 현황 5. 종료");
 				select = keyboard.nextInt();
 				if (select == 1)
 				{
@@ -63,9 +63,9 @@ public class UserPages
 				}
 				else if (select == 4)
 				{
-
+					statsPage(conn);
 				}
-				else if(select == 5)
+				else if (select == 5)
 				{
 					continue;
 				}
@@ -100,38 +100,33 @@ public class UserPages
 		{
 			try
 			{
-				System.out.println("1. 레시피 추천 받기 2. 요리 검색 3. 레시피 검색 4. 뒤로");
+				System.out.println("1. 요리 검색 2. 레시피 검색 3. 뒤로");
 				select = keyboard.nextInt();
 				if (select == 1)
 				{
-					
+					searchCuisine(conn);
 				}
 				else if (select == 2)
 				{
-					searchCuisine(conn);
-
-				}
-				else if (select == 3)
-				{
 					searchRecipe(conn);
 				}
-				else if (select == 4)
+				else if (select == 3)
 				{
 					continue;
 				}
 				else
 				{
-					System.out.println("1, 2, 3, 4 중에 선택해주세요.");
+					System.out.println("1, 2, 3 중에 선택해주세요.");
 					keyboard.nextLine();
 				}
 			}
 			catch (InputMismatchException e)
 			{
-				System.out.println("1, 2, 3, 4 중에 선택해주세요.");
+				System.out.println("1, 2, 3 중에 선택해주세요.");
 				keyboard.nextLine();
 			}
 
-		} while (select != 4);
+		} while (select != 3);
 	}
 
 	public static void searchCuisine(Connection conn)
@@ -450,7 +445,7 @@ public class UserPages
 	public static void getInactiveUserRatio(Connection conn) {
 		//Phase2 - Q9 활용. Order by 절을 없애고 집계함수로 변경.
 		String sql1 = "SELECT\r\n"
-				+ "	count(U.USER_ID) as inactives\r\n"
+				+ "	count(U.USER_ID)\r\n"
 				+ "FROM\r\n"
 				+ "	USERS U\r\n"
 				+ "WHERE\r\n"
@@ -462,7 +457,7 @@ public class UserPages
 				+ "		WHERE\r\n"
 				+ "			R.WRITER_ID = U.USER_ID\r\n"
 				+ "	)";
-		String sql2 = "SELECT COUNT(*) as total FROM USERS";
+		String sql2 = "SELECT COUNT(*) FROM USERS";
 		
 		try {
 			Statement stmt = conn.createStatement();
@@ -478,7 +473,7 @@ public class UserPages
 			if (total < 1)
 				System.out.println("아직 회원이 없어요 ㅠㅠ");
 			else 
-				System.out.println(inactives/(float)total*100+"%의 회원님들이 아직 활동을 안하셨어요! 다같이 힘내봐요!");
+				System.out.println(inactives/(float)total*100+"%의 회원님들이 아직 레시피를 공유하지 않으셨어요! 다같이 힘내봐요!");
 			
 			rs1.close(); rs2.close(); stmt.close();
 		} catch (SQLException e) {
