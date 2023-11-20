@@ -43,3 +43,9 @@
 * Q14 가장 높은 사람의 id를 출력하는게 아닌 상위 10명의 이름을 출력하도록 수정.
 * Q15 INGREDIENT.ingredient name, OWN.quantity, OWN.unit 조회하고 재료 이름 순으로 정렬하도록 변경
 * Q21(추가) 사용자가 식재료를 추가하기 전 해당 식재료를 이미 가지고 있는지의 정보를 알아내기 위해 필요하다고 생각되는 쿼리를 추가하였습니다. Team5-Phase3-3.sql 파일 60번째 줄에 추가한 쿼리의 원형을 넣어 두었습니다.
+
+
+## 작업 환경
+* Eclipse IDE for Enterprise Java and Web Developers - 2021-09 버전을 사용했습니다.
+* github로 코드를 팀원들끼리 공유하여 작업하였습니다.
+* Phase3JDBC.java 파일에 main method가 있습니다.
