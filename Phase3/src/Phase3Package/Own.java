@@ -1,31 +1,37 @@
+package Phase3Package;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Objects;
 
-public class Require
+public class Own
 {
-	private int recipe_ID;
+	private String user_ID;
 	private int ingredient_ID;
 	private int quantity;
 	private String unit;
 
-	public Require(int recipe_ID, int ingredient_ID, int quantity, String unit)
+	public Own()
 	{
-		this.recipe_ID = recipe_ID;
+
+	}
+
+	public Own(String user_ID, int ingredient_ID, int quantity, String unit)
+	{
+		this.user_ID = user_ID;
 		this.ingredient_ID = ingredient_ID;
 		this.quantity = quantity;
 		this.unit = unit;
 	}
 
-	public Require(ResultSet rs)
+	public Own(ResultSet rs)
 	{
 		try
 		{
-			recipe_ID = rs.getInt(1);
-			ingredient_ID = rs.getInt(2);
-			quantity = rs.getInt(3);
-			unit = rs.getString(4);
+			this.user_ID = rs.getString(1);
+			this.ingredient_ID = rs.getInt(2);
+			this.quantity = rs.getInt(3);
+			this.unit = rs.getString(4);
 		}
 		catch (SQLException e)
 		{
@@ -33,14 +39,14 @@ public class Require
 		}
 	}
 
-	public int getRecipe_ID()
+	public String getUser_ID()
 	{
-		return recipe_ID;
+		return user_ID;
 	}
 
-	public void setRecipe_ID(int recipe_ID)
+	public void setUser_ID(String user_ID)
 	{
-		this.recipe_ID = recipe_ID;
+		this.user_ID = user_ID;
 	}
 
 	public int getIngredient_ID()
@@ -75,8 +81,8 @@ public class Require
 
 	public String toString()
 	{
-		return "Require [recipe_ID=" + recipe_ID + ", ingredient_ID=" + ingredient_ID + ", quantity=" + quantity
-				+ ", unit=" + unit + "]";
+		return "Own [user_ID=" + user_ID + ", ingredient_ID=" + ingredient_ID + ", quantity=" + quantity + ", unit="
+				+ unit + "]";
 	}
 
 	public boolean equals(Object obj)
@@ -87,9 +93,8 @@ public class Require
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Require other = (Require) obj;
-		return ingredient_ID == other.ingredient_ID && quantity == other.quantity && recipe_ID == other.recipe_ID
-				&& Objects.equals(unit, other.unit);
+		Own other = (Own) obj;
+		return ingredient_ID == other.ingredient_ID && quantity == other.quantity && Objects.equals(unit, other.unit)
+				&& Objects.equals(user_ID, other.user_ID);
 	}
-
 }
