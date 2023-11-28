@@ -1,12 +1,43 @@
+<%@page import="org.eclipse.jdt.internal.compiler.ast.ForeachStatement"%>
+<%@page import="org.apache.jasper.tagplugins.jstl.core.ForEach"%>
+<%@page import="java.util.ArrayList"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page language="java" import="java.text.*, java.sql.*"%>
-<%@ page language="java" import="Phase3Package.Configure, Phase3Package.JDBCDriver, Phase3Package.Recipe, Phase3Package.Cuisine"%>
+<%@ page language="java" import="Phase3Package.Configure, Phase3Package.JDBCDriver, Phase3Package.Recipe, Phase3Package.Cuisine, Phase3Package.Comments"%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <script src="https://kit.fontawesome.com/7b62cb3616.js" crossorigin="anonymous"></script>
-<title>Insert title here</title>
+<!-- DB 연결 -->
+<%
+String URL = "jdbc:oracle:thin:@localhost:1521:orcl";
+String DB_ID = Configure.DB_ID;
+String DB_PW = "comp322";
+
+Connection conn = null;
+JDBCDriver.load();
+conn = JDBCDriver.getConnection(URL, DB_ID, DB_PW);
+%>
+
+<%
+PreparedStatement pstmt = null;
+ResultSet rs = null;
+int recipe_id = Integer.parseInt(request.getParameter("recipe_id"));
+
+String query = "SELECT R.*, C.* FROM Recipe R, Cuisine C WHERE R.Recipe_ID = ? AND R.Cuisine_ID = C.Cuisine_ID";
+pstmt = conn.prepareStatement(query);
+pstmt.setInt(1, recipe_id);
+rs = pstmt.executeQuery();
+rs.next();
+Recipe recipe = new Recipe(rs);
+Cuisine cuisine = new Cuisine(rs.getInt(11), rs.getString(12), rs.getString(13));
+
+out.println(
+		"<title>[" + cuisine.getCuisine_Name() + " - " + cuisine.getCategory() + "] " + recipe.getTitle() + "</title>");
+%>
+
+
 </head>
 <body>
 	<!-- Page Top -->
@@ -21,37 +52,15 @@
 	</div>
 	<nav></nav>
 
-	<!-- DB 연결 -->
-	<%
-	String URL = "jdbc:oracle:thin:@localhost:1521:orcl";
-	String DB_ID = Configure.DB_ID;
-	String DB_PW = "comp322";
-
-	Connection conn = null;
-	JDBCDriver.load();
-	conn = JDBCDriver.getConnection(URL, DB_ID, DB_PW);
-	%>
-
-	<%
-	PreparedStatement pstmt = null;
-	ResultSet rs = null;
-
-	String query = "SELECT R.*, C.* FROM Recipe R, Cuisine C WHERE R.Recipe_ID = ? AND R.Cuisine_ID = C.Cuisine_ID";
-	pstmt = conn.prepareStatement(query);
-	pstmt.setInt(1, Integer.parseInt(request.getParameter("recipe_id")));
-	rs = pstmt.executeQuery();
-	rs.next();
-	Recipe recipe = new Recipe(rs);
-	Cuisine cuisine = new Cuisine(rs.getInt(11), rs.getString(12), rs.getString(13));
-	%>
 	<div style="border: 1px solid black;">
-		<main id="recipe-container">
-			<section>
+		<main id="recipe-container" id="뭉탱이" style="display: flex;">
+			<section id="left_blank" style="display: block; float: left; width: 15%;">왼쪽 공백</section>
+			<section style="display: inline; margin: 0px 30px 0px 0px; width: 62%">
 				<!-- 레시피 헤더 -->
 				<header>
 					<%
 					out.println("<p>");
-					out.println("[" + cuisine.getCuisine_Name() + " - " + cuisine.getCategory() + "] " + recipe.getTitle());
+					out.println("<h3>[" + cuisine.getCuisine_Name() + " - " + cuisine.getCategory() + "] " + recipe.getTitle() + "</h3>");
 					out.println("</p>");
 					out.println("<p>");
 					out.println("<span style=\"color: #009933; margin-right: 30px\">작성자: " + recipe.getWriter_ID() + "</span>");
@@ -61,7 +70,7 @@
 					out.println("<span style=\"color: #999; margin-right: 30px\">요리 시간: " + recipe.getCooking_Time() + "</span>");
 					out.println("<span style=\"color: #999; margin-right: 30px\">양: " + recipe.getQnt() + "</span>");
 					out.println("<span style=\"color: #999;\">난이도: " + recipe.getLevel_NM() + "</span>");
-					out.println("</p>");
+					out.println("</p><hr>");
 					%>
 
 				</header>
@@ -74,10 +83,74 @@
 
 					out.println("<p>");
 					out.println("<span style=\"color: #999;\">참고 링크: " + recipe.getLink() + "</span>");
-					out.println("</p>");
+					out.println("</p><hr>");
 					%>
 				</article>
+				<br>
+				<%
+				int like_cnt = 0;
+				query = "SELECT Count(*) FROM Favorite F, Recipe R WHERE R.Recipe_ID = F.Like_Recipe_ID AND R.Recipe_ID = ?";
+				pstmt = conn.prepareStatement(query);
+				pstmt.setInt(1, recipe_id);
+				rs = pstmt.executeQuery();
+				rs.next();
+				like_cnt = rs.getInt(1);
+				%>
+				<div id="like-box" style="text-align: center;">
+					<button style="width: 105px; height: 40px; margin: auto;">
+						<i class="fa-solid fa-thumbs-up">
+							따봉
+							<%
+						out.println(like_cnt + " ");
+						%>
+						</i>
+					</button>
+				</div>
+				<br>
+				<%
+				int comment_cnt = 0;
+				ArrayList<Comments> commentAL = new ArrayList<>();
+
+				query = "SELECT C.* FROM Comments C, Recipe R WHERE R.Recipe_ID = C.Recipe_ID AND R.Recipe_ID = ?";
+				pstmt = conn.prepareStatement(query);
+				pstmt.setInt(1, recipe_id);
+				rs = pstmt.executeQuery();
+				while (rs.next())
+				{
+					commentAL.add(new Comments(rs));
+					comment_cnt++;
+				}
+				%>
+				<div id="comment-container">
+					<%
+					out.println("<p>전체 댓글 <b style=\"color: red;\">" + comment_cnt + "</b>개</p>");
+					%>
+					<div id="comment-input" style="display: flex;">
+						<textarea id="comment" cols="115" rows="3" placeholder="1. 로그인 O: 댓글 작성 가능 2. 로그인 X: readonly(로그인해야 댓글 작성 가능)" required>우와~ 맛있어 보여요~</textarea>
+						<button id="comment-submit" style="width: 15%; height: auto;">등록</button>
+					</div>
+					<div id="user-comments">
+						<ul style="list-style: none; padding-left: 0px;">
+							<%
+							for (Comments comment : commentAL)
+							{
+								String currentTimestampToString = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(comment.getComment_time());
+								out.println("<li style=\"margin:0; display: list-item;\"><div style=\"display: flex;\">");
+								out.println("<div class=\"comment_nickbox\" style=\"color: #999; float: left; width: 13%; margin-top:15px; flex: 13;\">"
+								+ comment.getUser_ID() + "</div>");
+								out.println("<div class=\"comment_content\" style=\"float: left; width: 60%; flex: 60;\"><p>"
+								+ comment.getComment_content() + "</p></div>");
+								out.println(
+								"<div class=\"comment_time\" style=\"color: #999; padding: 0; float: right; margin-top:15px; text-align: right; flex: 17;\">"
+										+ currentTimestampToString + "</div>");
+								out.println("</div></li><br>");
+							}
+							%>
+						</ul>
+					</div>
+				</div>
 			</section>
+			<section style="display: inline;">오른쪽 예비용</section>
 		</main>
 	</div>
 	<%
