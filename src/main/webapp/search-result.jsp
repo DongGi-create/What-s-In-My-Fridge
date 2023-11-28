@@ -78,7 +78,7 @@
 				{
 					Cuisine cuisine = cuisineAL.get(i);
 					String str = cuisine.getCuisine_Name() + " - " + cuisine.getCategory();
-					out.println("<li style=\"margin: 0 0 20px 0\">");
+					out.println("<li style=\"margin: 0 0 20px 0; list-style-type : none;\">");
 
 					while (str.indexOf(keyword) != -1)
 					{
@@ -100,8 +100,6 @@
 				cuisineAL.clear();
 				%>
 
-
-
 				<!-- 레시피 - 제목, 내용 검색 결과 -->
 				<%
 				query = "SELECT R.* FROM RECIPE R WHERE R.Title Like ?";
@@ -122,7 +120,7 @@
 				{
 					out.println("<div>");
 					out.println("<h3>" + "레시피 " + arraySize + "건</h3>");
-					out.println("<ul>");
+					out.println("<ul style=\"list-style: none;\">");
 				}
 				for (int i = 0; i < arraySize; i++)
 				{
