@@ -18,8 +18,12 @@
 			<input name="search-keyword" type="text" placeholder="검색창임" required><input type="submit" value="검색">
 		</form>
 	</div>
-	<nav></nav>	
-	<hr>
+	
+	<nav style="width: 100%; display: inline-block; background-color: green;">
+		<span style="float: right; color: white; margin: 0px 20px 0px 20px;">냉장고</span>
+		<span style="float: right; color: white; margin: 0px 20px 0px 20px;">레시피</span>
+		<span style="float: right; color: white; margin: 0px 20px 0px 20px;">요리</span>
+	</nav>
 
 </body>
 </html>
