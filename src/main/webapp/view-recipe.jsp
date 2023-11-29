@@ -47,6 +47,7 @@ out.println(
 		<form id="search-container" action="/WIF/search-result.jsp" style="border: 1px solid black; display: inline;">
 			<input name="search-keyword" type="text" placeholder="검색창임"><input type="submit" value="검색">
 		</form>
+		<jsp:include page="./login-include.jsp"/>
 	</div>
 	<nav></nav>
 
@@ -134,8 +135,9 @@ out.println(
 							{
 								String currentTimestampToString = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(comment.getComment_time());
 								out.println("<li style=\"margin:0; display: list-item;\"><div style=\"display: flex;\">");
-								out.println("<div class=\"comment_nickbox\" style=\"color: #999; float: left; width: 13%; margin-top:15px; flex: 13;\">"
-								+ comment.getUser_ID() + "</div>");
+								out.println(
+								"<div class=\"comment_nickbox\" style=\"color: #999; float: left; width: 13%; margin-top:15px; flex: 13;\">"
+										+ comment.getUser_ID() + "</div>");
 								out.println("<div class=\"comment_content\" style=\"float: left; width: 60%; flex: 60;\"><p>"
 								+ comment.getComment_content() + "</p></div>");
 								out.println(

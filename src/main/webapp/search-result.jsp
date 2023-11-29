@@ -22,6 +22,7 @@
 		<form id="search-container" action="/WIF/search-result.jsp" style="border: 1px solid black; display: inline;">
 			<input name="search-keyword" type="text" placeholder="검색창임"><input type="submit" value="검색">
 		</form>
+		<jsp:include page="./login-include.jsp"/>
 	</div>
 	<nav></nav>
 
@@ -40,8 +41,7 @@
 				<!-- DB 연결 -->
 				<%
 				String URL = "jdbc:oracle:thin:@localhost:1521:orcl";
-				String DB_ID = "knu";
-				out.println(Configure.DB_ID);
+				String DB_ID = Configure.DB_ID;
 				String DB_PW = "comp322";
 
 				Connection conn = null;
