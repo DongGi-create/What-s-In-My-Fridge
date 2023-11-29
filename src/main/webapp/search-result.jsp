@@ -4,6 +4,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page language="java" import="java.text.*, java.sql.*"%>
 <%@ page language="java" import="Phase3Package.Configure, Phase3Package.JDBCDriver, Phase3Package.Cuisine, Phase3Package.Recipe"%>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -39,7 +40,8 @@
 				<!-- DB 연결 -->
 				<%
 				String URL = "jdbc:oracle:thin:@localhost:1521:orcl";
-				String DB_ID = Configure.DB_ID;
+				String DB_ID = "knu";
+				out.println(Configure.DB_ID);
 				String DB_PW = "comp322";
 
 				Connection conn = null;

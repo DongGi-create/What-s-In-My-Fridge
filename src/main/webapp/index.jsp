@@ -18,8 +18,18 @@
 			<input name="search-keyword" type="text" placeholder="검색창임" required><input type="submit" value="검색">
 		</form>
 	</div>
+	
 	<nav></nav>	
+	
 	<hr>
+	
+	<div>
+    <a href="/WIF/my_fridge.jsp" style="text-decoration: none;">
+        <button style="padding: 10px 20px; background-color: #f0f0f0; border: 1px solid #ccc; cursor: pointer;">
+            다른 테스트 페이지로 이동
+        </button>
+    </a>
+	</div>
 
 </body>
 </html>

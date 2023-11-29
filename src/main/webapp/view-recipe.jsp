@@ -24,7 +24,7 @@
 	<!-- DB 연결 -->
 	<%
 	String URL = "jdbc:oracle:thin:@localhost:1521:orcl";
-	String DB_ID = Configure.DB_ID;
+	String DB_ID = "knu";
 	String DB_PW = "comp322";
 
 	Connection conn = null;
