@@ -21,24 +21,21 @@
 	%>
 
 	<%
-	request.setCharacterEncoding("utf-8");
-	String query = "INSERT INTO Comments(Recipe_ID, User_ID, Comment_Content) VALUES(?, ?, ?)";
+	String query = "DELETE FROM Comments WHERE Comment_ID = ?";
 	PreparedStatement pstmt = conn.prepareStatement(query);
-	String user_id = (String) session.getAttribute("user-id");
-	int recipe_id = Integer.parseInt(request.getParameter("recipe-id"));
-	pstmt.setInt(1, recipe_id);
-	pstmt.setString(2, user_id);
-	pstmt.setString(3, request.getParameter("comment-content"));
+	int comment_id = Integer.parseInt(request.getParameter("comment-id"));
+	pstmt.setInt(1, comment_id);
 	int result = pstmt.executeUpdate();
 
 	if (result > 0)
 	{
-		out.println("<script>document.location.href='/WIF/view-recipe.jsp?recipe-id=" + recipe_id + "';</script>");
+		out.println("<script>location.href=\"/WIF/view-recipe.jsp?recipe-id=" + request.getParameter("recipe-id")
+		+ "\"</script>");
 	}
 	else
 	{
-		out.println("<script>alert('댓글 등록에 실패했습니다.');document.location.href='/WIF/view-recipe.jsp?recipe-id=" + recipe_id
-		+ "';</script>");
+		out.println("<script>alert('댓글 삭제에 실패했습니다.');location.href=\"/WIF/view-recipe.jsp?recipe-id="
+		+ request.getParameter("recipe-id") + "\"</script>");
 	}
 	%>
 

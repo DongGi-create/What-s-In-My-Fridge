@@ -160,6 +160,12 @@ out.println(
 								out.println(
 								"<div class=\"comment_time\" style=\"color: #999; padding: 0; float: right; margin-top:15px; text-align: right; flex: 17;\">"
 										+ currentTimestampToString + "</div>");
+								out.println("<div class=\"comment-del-bnt\" style=\"float: right; flex: 3; margin-top:15px; margin-left: 5px; color: #999;\">");
+								if (((String) session.getAttribute("user-id")).equals(comment.getUser_ID()))
+									out.println("<a href=\"/WIF/comment-del.jsp?recipe-id=" + comment.getRecipe_ID() + "&comment-id="
+									+ comment.getComment_ID()
+									+ "\"><i class=\"fa-solid fa-x\" style=\"border: 1px solid #999; color: #999;\"></i></a>");
+								out.println("</div>");
 								out.println("</div></li><br>");
 							}
 							%>
