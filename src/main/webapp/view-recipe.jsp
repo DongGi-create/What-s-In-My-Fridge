@@ -21,7 +21,7 @@ conn = JDBCDriver.getConnection(URL, DB_ID, DB_PW);
 <%
 PreparedStatement pstmt = null;
 ResultSet rs = null;
-int recipe_id = Integer.parseInt(request.getParameter("recipe_id"));
+int recipe_id = Integer.parseInt(request.getParameter("recipe-id"));
 
 String query = "SELECT R.*, C.* FROM Recipe R, Cuisine C WHERE R.Recipe_ID = ? AND R.Cuisine_ID = C.Cuisine_ID";
 pstmt = conn.prepareStatement(query);
@@ -47,14 +47,14 @@ out.println(
 		<form id="search-container" action="/WIF/search-result.jsp" style="border: 1px solid black; display: inline;">
 			<input name="search-keyword" type="text" placeholder="검색창임"><input type="submit" value="검색">
 		</form>
-		<jsp:include page="./login-include.jsp"/>
+		<jsp:include page="./login-include.jsp" />
 	</div>
 	<nav></nav>
 
 	<div style="border: 1px solid black;">
 		<main id="recipe-container" id="뭉탱이" style="display: flex;">
-			<section id="left_blank" style="display: block; float: left; width: 15%;">왼쪽 공백</section>
-			<section style="display: inline; margin: 0px 30px 0px 0px; width: 62%">
+			<section id="left_blank" style="display: block; float: left; width: 15%;"></section>
+			<section style="display: inline; margin: 0px 30px 0px 0px; width: 70%">
 				<!-- 레시피 헤더 -->
 				<header>
 					<%
@@ -96,7 +96,7 @@ out.println(
 				like_cnt = rs.getInt(1);
 				%>
 				<div id="like-box" style="text-align: center;">
-					<button style="width: 105px; height: 40px; margin: auto;">
+					<button type="button" onClick="location.href='/WIF/like.jsp?recipe-id=<%out.print(request.getParameter("recipe-id"));%>'" style="width: 105px; height: 40px; margin: auto;">
 						<i class="fa-solid fa-thumbs-up">
 							따봉
 							<%
@@ -150,9 +150,10 @@ out.println(
 					</div>
 				</div>
 			</section>
-			<section style="display: inline;">오른쪽 예비용</section>
+			<section style="display: inline;"></section>
 		</main>
 	</div>
+
 	<%
 	rs.close();
 	pstmt.close();

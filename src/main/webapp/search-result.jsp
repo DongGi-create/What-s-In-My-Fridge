@@ -30,9 +30,9 @@
 	<main id="container">
 		<div id="뭉탱이" style="display: flex;">
 			<!-- 왼쪽 여백 -->
-			<section id="left_blank" style="display: block; float: left; width: 15%;">왼쪽 공백</section>
+			<section id="left_blank" style="display: block; float: left; width: 15%;"></section>
 			<!-- 중앙 메인 -->
-			<section style="display: inline; margin: 0px 30px 0px 0px; width: 62%">
+			<section style="display: inline; margin: 0px 30px 0px 0px; width: 70%">
 				<%
 				String keyword = request.getParameter("search-keyword");
 				out.println("<h2>" + keyword + "에 대한 검색 결과입니다." + "</h2>");
@@ -130,7 +130,7 @@
 					String str = recipe.getTitle();
 
 					out.println("<li style=\"margin: 0 0 20px 0\">");
-					out.println("<a href=\"/WIF/view-recipe.jsp?recipe_id=" + recipe.getRecipe_ID()
+					out.println("<a href=\"/WIF/view-recipe.jsp?recipe-id=" + recipe.getRecipe_ID()
 					+ "\" target=\"_blank\" style=\"color: #4656c7\">");
 					if (str.length() > 50)
 						str = str.substring(0, 50 - 2) + "...";
@@ -185,7 +185,7 @@
 				%>
 			</section>
 			<!-- 오른쪽 잡것들 -->
-			<section style="display: inline;">오른쪽 예비용</section>
+			<section style="display: inline;"></section>
 		</div>
 
 
