@@ -1,3 +1,5 @@
 /bin/
 /Phase3/src/Phase3Package/Configure.java
 /src/main/webapp/WEB-INF/classes/Phase3Package/Configure.class
+.classpath
+.project
