@@ -21,7 +21,7 @@ conn = JDBCDriver.getConnection(URL, DB_ID, DB_PW);
 <%
 PreparedStatement pstmt = null;
 ResultSet rs = null;
-int recipe_id = Integer.parseInt(request.getParameter("recipe_id"));
+int recipe_id = Integer.parseInt(request.getParameter("recipe-id"));
 
 String query = "SELECT R.*, C.* FROM Recipe R, Cuisine C WHERE R.Recipe_ID = ? AND R.Cuisine_ID = C.Cuisine_ID";
 pstmt = conn.prepareStatement(query);
@@ -47,14 +47,14 @@ out.println(
 		<form id="search-container" action="/WIF/search-result.jsp" style="border: 1px solid black; display: inline;">
 			<input name="search-keyword" type="text" placeholder="검색창임"><input type="submit" value="검색">
 		</form>
-		<jsp:include page="./login-include.jsp"/>
+		<jsp:include page="./login-include.jsp" />
 	</div>
 	<nav></nav>
 
 	<div style="border: 1px solid black;">
 		<main id="recipe-container" id="뭉탱이" style="display: flex;">
-			<section id="left_blank" style="display: block; float: left; width: 15%;">왼쪽 공백</section>
-			<section style="display: inline; margin: 0px 30px 0px 0px; width: 62%">
+			<section id="left_blank" style="display: block; float: left; width: 15%;"></section>
+			<section style="display: inline; margin: 0px 30px 0px 0px; width: 70%">
 				<!-- 레시피 헤더 -->
 				<header>
 					<%
@@ -96,7 +96,7 @@ out.println(
 				like_cnt = rs.getInt(1);
 				%>
 				<div id="like-box" style="text-align: center;">
-					<button style="width: 105px; height: 40px; margin: auto;">
+					<button type="button" onClick="location.href='/WIF/like.jsp?recipe-id=<%out.print(request.getParameter("recipe-id"));%>'" style="width: 105px; height: 40px; margin: auto;">
 						<i class="fa-solid fa-thumbs-up">
 							따봉
 							<%
@@ -124,9 +124,26 @@ out.println(
 					<%
 					out.println("<p>전체 댓글 <b style=\"color: red;\">" + comment_cnt + "</b>개</p>");
 					%>
-					<div id="comment-input" style="display: flex;">
-						<textarea id="comment" cols="115" rows="3" placeholder="1. 로그인 O: 댓글 작성 가능 2. 로그인 X: readonly(로그인해야 댓글 작성 가능)" required>우와~ 맛있어 보여요~</textarea>
-						<button id="comment-submit" style="width: 15%; height: auto;">등록</button>
+					<div id="comment-input">
+						<%
+						out.println("<form action=\"/WIF/comment.jsp?recipe-id=" + recipe_id + "\" method=\"post\" style=\"display: flex;\">");
+
+						if (session.getAttribute("user-id") == null)
+						{
+							out.println(
+							"<textarea id=\"comment\" cols=\"115\" rows=\"3\" placeholder=\"댓글은 로그인 한 후에 가능합니다.\" readonly></textarea>");
+							out.println("<button id=\"comment-submit\" style=\"width: 15%; height: auto;\" disabled>등록</button>");
+						}
+						else
+						{
+							out.println(
+							"<textarea name=\"comment-content\" cols=\"115\" rows=\"3\" placeholder=\"레시피에 대해 댓글을 남겨주세요.\" maxlength=\"500\" required>우와~ 정말 맛있어 보여요~</textarea>");
+							out.println(
+							"<input type=\"submit\" id=\"comment-submit\" value=\"등록\"style=\"width: 15%; height: auto;\"></input>");
+						}
+						out.println("</form>");
+						%>
+
 					</div>
 					<div id="user-comments">
 						<ul style="list-style: none; padding-left: 0px;">
@@ -143,6 +160,12 @@ out.println(
 								out.println(
 								"<div class=\"comment_time\" style=\"color: #999; padding: 0; float: right; margin-top:15px; text-align: right; flex: 17;\">"
 										+ currentTimestampToString + "</div>");
+								out.println("<div class=\"comment-del-bnt\" style=\"float: right; flex: 3; margin-top:15px; margin-left: 5px; color: #999;\">");
+								if (((String) session.getAttribute("user-id")).equals(comment.getUser_ID()))
+									out.println("<a href=\"/WIF/comment-del.jsp?recipe-id=" + comment.getRecipe_ID() + "&comment-id="
+									+ comment.getComment_ID()
+									+ "\"><i class=\"fa-solid fa-x\" style=\"border: 1px solid #999; color: #999;\"></i></a>");
+								out.println("</div>");
 								out.println("</div></li><br>");
 							}
 							%>
@@ -150,9 +173,10 @@ out.println(
 					</div>
 				</div>
 			</section>
-			<section style="display: inline;">오른쪽 예비용</section>
+			<section style="display: inline;"></section>
 		</main>
 	</div>
+
 	<%
 	rs.close();
 	pstmt.close();
