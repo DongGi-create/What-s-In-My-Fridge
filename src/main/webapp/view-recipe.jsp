@@ -124,9 +124,26 @@ out.println(
 					<%
 					out.println("<p>전체 댓글 <b style=\"color: red;\">" + comment_cnt + "</b>개</p>");
 					%>
-					<div id="comment-input" style="display: flex;">
-						<textarea id="comment" cols="115" rows="3" placeholder="1. 로그인 O: 댓글 작성 가능 2. 로그인 X: readonly(로그인해야 댓글 작성 가능)" required>우와~ 맛있어 보여요~</textarea>
-						<button id="comment-submit" style="width: 15%; height: auto;">등록</button>
+					<div id="comment-input">
+						<%
+						out.println("<form action=\"/WIF/comment.jsp?recipe-id=" + recipe_id + "\" method=\"post\" style=\"display: flex;\">");
+
+						if (session.getAttribute("user-id") == null)
+						{
+							out.println(
+							"<textarea id=\"comment\" cols=\"115\" rows=\"3\" placeholder=\"댓글은 로그인 한 후에 가능합니다.\" readonly></textarea>");
+							out.println("<button id=\"comment-submit\" style=\"width: 15%; height: auto;\" disabled>등록</button>");
+						}
+						else
+						{
+							out.println(
+							"<textarea name=\"comment-content\" cols=\"115\" rows=\"3\" placeholder=\"레시피에 대해 댓글을 남겨주세요.\" maxlength=\"500\" required>우와~ 정말 맛있어 보여요~</textarea>");
+							out.println(
+							"<input type=\"submit\" id=\"comment-submit\" value=\"등록\"style=\"width: 15%; height: auto;\"></input>");
+						}
+						out.println("</form>");
+						%>
+
 					</div>
 					<div id="user-comments">
 						<ul style="list-style: none; padding-left: 0px;">
@@ -143,6 +160,12 @@ out.println(
 								out.println(
 								"<div class=\"comment_time\" style=\"color: #999; padding: 0; float: right; margin-top:15px; text-align: right; flex: 17;\">"
 										+ currentTimestampToString + "</div>");
+								out.println("<div class=\"comment-del-bnt\" style=\"float: right; flex: 3; margin-top:15px; margin-left: 5px; color: #999;\">");
+								if (((String) session.getAttribute("user-id")).equals(comment.getUser_ID()))
+									out.println("<a href=\"/WIF/comment-del.jsp?recipe-id=" + comment.getRecipe_ID() + "&comment-id="
+									+ comment.getComment_ID()
+									+ "\"><i class=\"fa-solid fa-x\" style=\"border: 1px solid #999; color: #999;\"></i></a>");
+								out.println("</div>");
 								out.println("</div></li><br>");
 							}
 							%>

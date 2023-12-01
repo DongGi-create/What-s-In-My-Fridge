@@ -6,6 +6,27 @@
 <meta charset="UTF-8">
 <script src="https://kit.fontawesome.com/7b62cb3616.js" crossorigin="anonymous"></script>
 <title>우왕</title>
+<style>
+
+    nav {
+      background-color: #57cc99;
+      overflow: hidden;
+    }
+
+    nav a {
+      float: left;
+      display: block;
+      color: white;
+      text-align: center;
+      padding: 14px 16px;
+      text-decoration: none;
+    }
+
+    nav a:hover {
+      background-color: #ddd;
+      color: black;
+    }
+</style>
 </head>
 
 <body>
@@ -22,7 +43,12 @@
 		<jsp:include page="./login-include.jsp"/>
 	</div>
 
-	<nav></nav>
+	<nav>
+	  <a href="index.jsp">홈</a>
+	  <a href="all_cuisine.jsp">요리</a>
+	  <a>레시피</a>
+	  <a>냉장고</a>
+	</nav>
 
 	<hr>
 
