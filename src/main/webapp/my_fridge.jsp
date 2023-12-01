@@ -1,4 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=EUC-KR" pageEncoding="EUC-KR"%>
+<%@ page language="java" import="Phase3Package.Configure, Phase3Package.JDBCDriver, Phase3Package.OwnIngredient"%>
+<%@ page language="java" import="java.sql.*" %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -78,12 +80,14 @@
 	</div>
 	<nav></nav>
 	
+	
+	
+	
+	
     <h1>냉장고 안의 재료</h1>
     <ul id="ingredient-list">
         <!-- 재료들을 여기에 동적으로 추가할 예정 -->
     </ul>
-
-
 
     <div class="btn-container">
         <button class="add-btn">냉장고 재료 추가하기</button>
@@ -96,6 +100,25 @@
         </a>
     </div>
 
+		
+		<%
+		/* DB연결 */
+		String URL = "jdbc:oracle:thin:@localhost:1521:orcl";
+		String DB_ID = Configure.DB_ID;
+		String DB_PW = "comp322";
+		
+		Connection conn = null;
+		JDBCDriver.load();
+		conn = JDBCDriver.getConnection(URL, DB_ID, DB_PW);
+		
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String query = "SELECT I.INGREDIENT_NAME, O.QUANTITY, O.UNIT FROM USERS U,OWN O,INGREDIENT I WHERE U.USER_ID = O.USER_ID AND I.INGREDIENT_ID = O.INGREDIENT_ID AND U.User_ID = ? ORDER BY I.INGREDIENT_NAME";
+		pstmt = conn.prepareStatement(query);
+		
+		
+		%>
+		
     	<script>
         const ingredients = ["우유", "계란", "치즈", "야채", "과일"];
 
