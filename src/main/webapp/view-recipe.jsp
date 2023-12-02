@@ -1,3 +1,5 @@
+<%@page import="java.util.Map.Entry"%>
+<%@page import="java.util.HashMap"%>
 <%@page import="java.util.ArrayList"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page language="java" import="java.text.*, java.sql.*"%>
@@ -76,6 +78,48 @@ out.println(
 				<!-- 본문 -->
 				<article>
 					<%
+					// Require
+					HashMap<Integer, String> requireMap = new HashMap<>();
+					query = "SELECT I.Ingredient_ID, I.Ingredient_Name FROM Require R, Ingredient I WHERE R.Recipe_ID = ? AND R.Ingredient_ID = I.Ingredient_ID";
+					pstmt = conn.prepareStatement(query);
+					pstmt.setInt(1, recipe.getRecipe_ID());
+					rs = pstmt.executeQuery();
+					while (rs.next())
+					{
+						requireMap.put(rs.getInt(1), rs.getString(2));
+					}
+
+					// Own
+					ArrayList<Integer> ownAL = new ArrayList<>();
+					if (session.getAttribute("user-id") != null)
+					{
+						query = "SELECT O.Ingredient_ID FROM Own O WHERE O.User_ID = ?";
+						pstmt = conn.prepareStatement(query);
+						pstmt.setString(1, (String) session.getAttribute("user-id"));
+
+						rs = pstmt.executeQuery();
+						while (rs.next())
+						{
+							ownAL.add(rs.getInt(1));
+						}
+					}
+
+					out.println("<p>필요 재료: ");
+					if (session.getAttribute("user-id") == null)
+						for (Entry<Integer, String> entry : requireMap.entrySet())
+							out.print(entry.getValue() + " ");
+					else
+					{
+						for (Entry<Integer, String> entry : requireMap.entrySet())
+						{
+							if (ownAL.contains(entry.getKey()))
+						out.print("<span style=\"color: #57cc99;\"><b>" + entry.getValue() + " </b></span>");
+							else
+								out.print("<span>" + entry.getValue() + " </span>");
+						}
+					}
+					out.println("</p>");
+
 					out.println("<p>");
 					out.println(recipe.getContent());
 					out.println("</p>");
@@ -160,8 +204,10 @@ out.println(
 								out.println(
 								"<div class=\"comment_time\" style=\"color: #999; padding: 0; float: right; margin-top:15px; text-align: right; flex: 17;\">"
 										+ currentTimestampToString + "</div>");
-								out.println("<div class=\"comment-del-bnt\" style=\"float: right; flex: 3; margin-top:15px; margin-left: 5px; color: #999;\">");
-								if (((String) session.getAttribute("user-id")).equals(comment.getUser_ID()))
+								out.println(
+								"<div class=\"comment-del-bnt\" style=\"float: right; flex: 3; margin-top:15px; margin-left: 5px; color: #999;\">");
+								if (session.getAttribute("user-id") != null
+								&& ((String) session.getAttribute("user-id")).equals(comment.getUser_ID()))
 									out.println("<a href=\"/WIF/comment-del.jsp?recipe-id=" + comment.getRecipe_ID() + "&comment-id="
 									+ comment.getComment_ID()
 									+ "\"><i class=\"fa-solid fa-x\" style=\"border: 1px solid #999; color: #999;\"></i></a>");
