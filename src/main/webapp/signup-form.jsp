@@ -122,7 +122,7 @@ nav a:hover {
 				<i class="fa-solid fa-exclamation" style="color: #57cc99;"></i>
 				Email
 			</p>
-			<input type="text" name="email" placeholder="이메일" required> <input type="button" value="Email 중복확인" onclick="return emailValidation()">
+			<input type="text" name="email" id="email" placeholder="이메일" required> <input type="button" value="Email 중복확인" onclick="return emailValidation()">
 			<p>성별</p>
 			<select name="sex">
 				<option value="M">M</option>
@@ -202,13 +202,14 @@ nav a:hover {
 			else
 				alert("이미 사용하고 있는 아이디입니다.");
 		}
-
+		
 		function emailValidation() {
 			var email = document.getElementById("email").value;
 			var flag = true;
 			var list = [
 	<%=values2.toString()%>
 		];
+
 			if (email == "") {
 				alert("이메일을 입력해주세요.");
 				return;
