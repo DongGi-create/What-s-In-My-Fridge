@@ -8,9 +8,9 @@
 <body>
 	<%
 	if (session.getAttribute("user-id") == null)
-		out.println("<a href=\"/WIF/login-form.html\">로그인</a>");
+		out.println("<a style=\"text-decoration-line: none; color: white;\" href=\"/WIF/login-form.html\" id=\"loginNeeded\">로그인</a>");
 	else
-		out.println("<a href=\"/WIF/logout.jsp\">로그아웃</a>");
+		out.println("<a style=\"text-decoration-line: none; color: white;\" href=\"/WIF/logout.jsp\" id=\"logoutNeeded\">로그아웃</a>");
 	%>
 </body>
 </html>
