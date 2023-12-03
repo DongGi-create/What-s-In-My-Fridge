@@ -13,7 +13,7 @@ public class Own
 
 	public Own()
 	{
-
+		
 	}
 
 	public Own(String user_ID, int ingredient_ID, int quantity, String unit)
@@ -85,6 +85,10 @@ public class Own
 				+ unit + "]";
 	}
 
+	public void Print() {
+		System.out.println("print: "+this.toString());
+	}
+	
 	public boolean equals(Object obj)
 	{
 		if (this == obj)

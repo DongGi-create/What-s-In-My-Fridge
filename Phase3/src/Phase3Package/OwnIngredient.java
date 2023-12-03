@@ -63,11 +63,9 @@ public class OwnIngredient
 		this.unit = unit;
 	}
 
-	public String toString()
-	{
-		return "OwnIngredient [ingredient_Name=" + ingredient_Name + ", quantity=" + quantity + ", unit="
-				+ unit + "]";
-	}
+	public String toString() {
+        return "Ingredient: " + ingredient_Name + ", Quantity: " + quantity + ", Unit: " + unit;
+    }
 
 	public boolean equals(Object obj)
 	{

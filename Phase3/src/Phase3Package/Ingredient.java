@@ -9,6 +9,9 @@ public class Ingredient
 	private int ingredient_ID;
 	private String ingredient_Name;
 
+	public Ingredient() {
+		
+	}
 	public Ingredient(int ingredient_ID, String ingredient_Name)
 	{
 		this.ingredient_ID = ingredient_ID;
@@ -54,6 +57,9 @@ public class Ingredient
 		return "Ingredient [ingredient_ID=" + ingredient_ID + ", ingredient_Name=" + ingredient_Name + "]";
 	}
 
+	public void Print() {
+		System.out.println("print: "+this.toString());
+	}
 	public boolean equals(Object obj)
 	{
 		if (this == obj)
