@@ -89,7 +89,7 @@ nav a:hover {
 		<a href="index.jsp">홈</a>
 		<a href="all_cuisine.jsp">요리</a>
 		<a>레시피</a>
-		<a>냉장고</a>
+		<a href="my_fridge.jsp">냉장고</a>
 	</nav>
 
 	<hr>
