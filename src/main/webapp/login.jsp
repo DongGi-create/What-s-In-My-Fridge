@@ -42,7 +42,7 @@
 		out.println("<script>alert('로그인 성공');document.location.href='/WIF/index.jsp';</script>");
 	}
 	else
-		out.println("<script>alert('로그인 실패');document.location.href='/WIF/login-form.html';</script>");
+		out.println("<script>alert('로그인 실패');document.location.href='/WIF/login-form.html.';</script>");
 	%>
 
 	<%
