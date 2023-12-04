@@ -1,5 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=EUC-KR"
-	pageEncoding="EUC-KR"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
 <%@ page language="java"
 	import="Phase3Package.Configure, Phase3Package.JDBCDriver, Phase3Package.OwnIngredient"%>
 <%@ page language="java" import="java.sql.*"%>
@@ -9,7 +9,7 @@
 <head>
 <meta charset="UTF-8">
 <script src="https://kit.fontawesome.com/7b62cb3616.js" crossorigin="anonymous"></script>
-<title>³ÃÀå°í Àç·á ¸ñ·Ï</title>
+<title>ëƒ‰ì¥ê³  ì¬ë£Œ ëª©ë¡</title>
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 	<link rel="stylesheet" type="text/css" href="my_fridge.css">
@@ -18,27 +18,27 @@
 <body>
 	<!-- Page Top -->
 	<div id="pagetop" style="border: 1px solid black;">
-		<a id="wif-logo" href="/WIF/index.jsp" title="WIF È¨"
-			style="text-decoration-line: none;"> <!-- »ó ¿ì ÇÏ ÁÂ --> <i
+		<a id="wif-logo" href="/WIF/index.jsp" title="WIF í™ˆ"
+			style="text-decoration-line: none;"> <!-- ìƒ ìš° í•˜ ì¢Œ --> <i
 			class="fa-solid fa-plate-wheat fa-2x"
 			style="margin: 10px 10px 10px 10px;"> What's in my Fridge?</i>
 		</a>
 		<form id="search-container" action="/WIF/search-result.jsp"
 			style="border: 1px solid black; display: inline;">
-			<input name="search-keyword" type="text" placeholder="°Ë»öÃ¢ÀÓ"><input
-				type="submit" value="°Ë»ö">
+			<input name="search-keyword" type="text" placeholder="ê²€ìƒ‰ì°½ì„"><input
+				type="submit" value="ê²€ìƒ‰">
 		</form>
 	</div>
 	<nav></nav>
 
 
-	<h1>³ÃÀå°í ¾ÈÀÇ Àç·á</h1>
+	<h1>ëƒ‰ì¥ê³  ì•ˆì˜ ì¬ë£Œ</h1>
 	<ul id="ingredient-list">
-		<!-- Àç·áµéÀ» ¿©±â¿¡ µ¿ÀûÀ¸·Î Ãß°¡ÇÒ ¿¹Á¤ -->
+		<!-- ì¬ë£Œë“¤ì„ ì—¬ê¸°ì— ë™ì ìœ¼ë¡œ ì¶”ê°€í•  ì˜ˆì • -->
 	</ul>
 
 	<%
-	/* DB¿¬°á */
+	/* DBì—°ê²° */
 	String URL = "jdbc:oracle:thin:@localhost:1521:orcl";
 	String DB_ID = Configure.DB_ID;
 	String DB_PW = "comp322";
@@ -69,15 +69,15 @@
 		    <input type="hidden"  name="selectedQuantity" value="">
 		    <input type="hidden"  name="selectedUnit" value="">
 		    <div class="btn-container">
-		        <button type="button" class="remove-btn" onclick="handleRemove()">¼±ÅÃÇÑ Àç·á Á¦°ÅÇÏ±â</button>
+		        <button type="button" class="remove-btn" onclick="handleRemove()">ì„ íƒí•œ ì¬ë£Œ ì œê±°í•˜ê¸°</button>
 		    </div>
 		</form>
 		    	
 		<%
 	} else {
-		out.println("·Î±×ÀÎÀÌ ÇÊ¿äÇÕ´Ï´Ù...");
+		out.println("ë¡œê·¸ì¸ì´ í•„ìš”í•©ë‹ˆë‹¤...");
 		%>
-	    <p>·Î±×ÀÎÀÌ ÇÊ¿äÇÕ´Ï´Ù. <a href="/WIF/login-form.html">·Î±×ÀÎ</a>ÇÏ¼¼¿ä.</p>
+	    <p>ë¡œê·¸ì¸ì´ í•„ìš”í•©ë‹ˆë‹¤. <a href="/WIF/login-form.html">ë¡œê·¸ì¸</a>í•˜ì„¸ìš”.</p>
 		<%
 	}
 	%>
@@ -109,7 +109,7 @@
                 radioBtn.value = ingredient.ingredient_Name;
 
                 const label = document.createElement("label");
-                label.textContent = 'Àç·á: ' + ingredient.ingredient_Name + ', ¾ç: ' + ingredient.quantity + ', ´ÜÀ§: ' + ingredient.unit;
+                label.textContent = 'ì¬ë£Œ: ' + ingredient.ingredient_Name + ', ì–‘: ' + ingredient.quantity + ', ë‹¨ìœ„: ' + ingredient.unit;
 
                 li.appendChild(radioBtn);
                 li.appendChild(label);
