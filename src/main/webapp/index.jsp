@@ -145,7 +145,9 @@ nav a:hover {
 	</div>
 
 	<nav>
-		<a href="index.jsp">홈</a> <a href="all_cuisine.jsp">요리</a> <a>레시피</a>
+		<a href="index.jsp">홈</a>
+		<a href="all_cuisine.jsp">요리</a>
+		<a href="recipe-tab.jsp">레시피</a>
 		<a href="my_fridge.jsp">냉장고</a>
 	</nav>
 
@@ -215,7 +217,7 @@ nav a:hover {
 			
 			<div class="recipe-today">
 				<p>
-					<i class="fa-solid fa-crown fa-2x" style="color: #d4cf25;"> 최근 올라온 레시피</i>
+					<i class="fa-solid fa-pen fa-2x" style="color: #d4cf25;"> 최근 올라온 레시피</i>
 				</p>
 			</div>
 			<%
@@ -275,7 +277,7 @@ nav a:hover {
 
 			<div>
 				<p style="text-align: center;">
-					<i class="fa-solid fa-crown fa-2x" style="color: #d4cf25;">통계</i>
+					<i class="fa-solid fa-chart-simple fa-2x" style="color: #d4cf25;"> 통계</i>
 				</p>
 
 				<div class="userRanking">
