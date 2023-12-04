@@ -32,9 +32,6 @@
 	<nav></nav>
 
 
-
-
-
 	<h1>냉장고 안의 재료</h1>
 	<ul id="ingredient-list">
 		<!-- 재료들을 여기에 동적으로 추가할 예정 -->
@@ -69,7 +66,7 @@
 		
 		<div class="btn-container">
         	<a href="/WIF/addIngredient.jsp" class="add-btn">냉장고 재료 추가하기</a>
-        	<a href="/WIF/removeIngredient.jsp" class="remove-btn">냉장고 재료 추가하기</a>
+        	<a href="/WIF/removeIngredient.jsp" class="remove-btn">냉장고 재료 제거하기</a>
     	</div>
 		<%
 	} else {
