@@ -88,7 +88,7 @@ nav a:hover {
 	<nav>
 		<a href="index.jsp">홈</a>
 		<a href="all_cuisine.jsp">요리</a>
-		<a href="recipe-tab.jsp">레시피</a>
+		<a>레시피</a>
 		<a href="my_fridge.jsp">냉장고</a>
 	</nav>
 
@@ -100,7 +100,7 @@ nav a:hover {
 		<section id="main-content" style="display: block; float: left; width: 70%">
 			<div class="recipe-today">
 				<p>
-					<i class="fa-solid fa-crown fa-2x" style="color: #d4cf25;"> 오늘의 레시피</i>
+					<i class="fa-solid fa-crown fa-2x" style="color: #d4cf25;"> 추천 레시피</i>
 				</p>
 			</div>
 			<%
@@ -114,49 +114,61 @@ nav a:hover {
 			%>
 
 			<%
-			String query = "SELECT * FROM (SELECT R.recipe_id, R.title, R.writer_id, CU.cuisine_name, CU.category, (SELECT COUNT(*) FROM FAVORITE F WHERE R.recipe_id = F.like_recipe_id and f.like_time BETWEEN TO_DATE(TO_CHAR(sysdate-1, 'YYYYMMDD') || '000000', 'YYYYMMDDHH24MISS') AND TO_DATE(TO_CHAR(sysdate, 'YYYYMMDD') || '000000', 'YYYYMMDDHH24MISS')) as likecount, (SELECT COUNT(*) FROM COMMENTS C WHERE R.recipe_id = C.recipe_id and C.comment_time BETWEEN TO_DATE(TO_CHAR(sysdate-1, 'YYYYMMDD') || '000000', 'YYYYMMDDHH24MISS') AND TO_DATE(TO_CHAR(sysdate, 'YYYYMMDD') || '000000', 'YYYYMMDDHH24MISS')) as commentcount,(SELECT COUNT(*) FROM FAVORITE F WHERE R.recipe_id = F.like_recipe_id) as totlikecount, (SELECT COUNT(*) FROM COMMENTS C WHERE R.recipe_id = C.recipe_id) as totcommentcount FROM RECIPE R, CUISINE CU WHERE R.cuisine_id = CU.cuisine_id ORDER BY likecount + commentcount DESC, totlikecount + totcommentcount DESC) WHERE ROWNUM <= 6";
-			PreparedStatement pstmt = conn.prepareStatement(query);
-			ResultSet rs = pstmt.executeQuery();
-			int rank = 1;
+			String query = null;
+			PreparedStatement pstmt = null;
+			ResultSet rs = null;
+			String user_id = (String) session.getAttribute("user-id");
+			if (user_id != null) {
+				query = "select R.recipe_ID, R.Title, R.writer_ID, C.Cuisine_Name, C.Category FROM Recipe R, CUISINE C WHERE R.Cuisine_ID = C.Cuisine_ID AND NOT EXISTS ((SELECT Require.Ingredient_ID FROM Require WHERE Require.Recipe_id = R.Recipe_ID) MINUS (SELECT Own.ingredient_ID FROM Own WHERE Own.user_id = ?))";
+				pstmt = conn.prepareStatement(query);
+				pstmt.setString(1, user_id);
+				rs = pstmt.executeQuery();
+				ArrayList<String> titles = new ArrayList<>();
+				ArrayList<String> writers = new ArrayList<>();
+				ArrayList<String> cuisines = new ArrayList<>();
+				ArrayList<String> categories = new ArrayList<>();
+				ArrayList<Integer> ids = new ArrayList<>();
 
-			ArrayList<String> titles = new ArrayList<>();
-			ArrayList<String> writers = new ArrayList<>();
-			ArrayList<String> cuisines = new ArrayList<>();
-			ArrayList<String> categories = new ArrayList<>();
-			ArrayList<Integer> ids = new ArrayList<>();
-
-			while (rs.next()) {
-				int id = rs.getInt(1);
-				String raw_title = rs.getString(2);
-				String title = raw_title.substring(0, Math.min(30, raw_title.length()));
-				if (raw_title.length() > 30)
-					title = title + "...";
-				ids.add(id);
-				titles.add(title);
-				writers.add(rs.getString(3));
-				cuisines.add(rs.getString(4));
-				categories.add(rs.getString(5));
-			}
-			for (int j = 0; j < 2; j++) {
-
+				while (rs.next()) {
+					int id = rs.getInt(1);
+					String raw_title = rs.getString(2);
+					String title = raw_title.substring(0, Math.min(30, raw_title.length()));
+					if (raw_title.length() > 30)
+				title = title + "...";
+					ids.add(id);
+					titles.add(title);
+					writers.add(rs.getString(3));
+					cuisines.add(rs.getString(4));
+					categories.add(rs.getString(5));
+				}
+				if (ids.size() > 0) {
+					for (int j = 0; j < Math.round((ids.size() / 3)); j++) {
 				out.println("<div class=\"recipe-rank\">");
 				for (int i = 0; i < 3; i++) {
 					int idx = j * 3 + i;
 					out.println("<div class=\"post\">");
-					out.println("<div style=\"font-size: 25px; color: #57cc99; margin-bottom: 15px;\">" + rank++ + "위</div>");
-					out.println("<div style=\"margin-bottom: 15px\"><a style=\"text-decoration-line: none; color: black;\" href=\"/WIF/view-recipe.jsp?recipe-id=" + ids.get(idx)
-					+ "\">" + titles.get(idx) + "</a></div>");
-					out.println("<div><span style=\"float: left; color: #999;\">" + cuisines.get(idx) + " | " + categories.get(idx)
-					+ "</span><span style=\"float: right; color: #009933;\">" + writers.get(idx) + "</span></div>");
+					out.println(
+							"<div style=\"margin-bottom: 15px\"><a style=\"text-decoration-line: none; color: black;\" href=\"/WIF/view-recipe.jsp?recipe-id="
+									+ ids.get(idx) + "\">" + titles.get(idx) + "</a></div>");
+					out.println("<div><span style=\"float: left; color: #999;\">" + cuisines.get(idx) + " | "
+							+ categories.get(idx) + "</span><span style=\"float: right; color: #009933;\">"
+							+ writers.get(idx) + "</span></div>");
 					out.println("</div>");
 				}
 				out.println("</div>");
+					}
+				} else {
+					out.println("<p>만들 수 있는 레시피가 없습니다.</p><p>냉장고에 재료를 더 추가해보세요!</p>");
+				}
+				rs.close();
+				pstmt.close();
+				JDBCDriver.close(conn);
+			} else {
+				out.println("<div class=\"recipe-rank\">로그인하시면 추천 레시피를 볼 수 있습니다.</div>");
 			}
 			%>
 			<%
-			rs.close();
-			pstmt.close();
-			JDBCDriver.close(conn);
+
 			%>
 		</section>
 		<!-- 오른쪽 -->
