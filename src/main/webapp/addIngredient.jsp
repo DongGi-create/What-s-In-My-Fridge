@@ -66,13 +66,12 @@
 	            <form method="post" action="insertIngredient.jsp?ingredient-id=<%out.print(insertIngredient.getIngredient_ID()); %>">
 	                <h1><%=title%></h1>
 	                <p><%=subText%></p>
-	                <input type="hidden" name="isHaving" value="<%=Boolean.toString(isHaving)%>">
 	                <label for="quantity">재료의 양을 입력해주세요:</label>
 	                <input type="text" id="quantity" name="quantity" pattern = "[0-9]{1,10}" required>
 	                
 	                <label for="unit">단위를 입력해주세요:</label>
 	                <input type="text" id="unit" name="unit" required>
-	                <button onclick="goMyFridge()">Submit</button>
+	                <button>Submit</button>
 	            </form>
 	            <%
 	        }
