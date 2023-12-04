@@ -158,8 +158,7 @@ nav a:hover {
 			style="display: block; float: left; width: 70%">
 			<div class="recipe-today">
 				<p>
-					<i class="fa-solid fa-crown fa-2x" style="color: #d4cf25;"> 오늘의
-						레시피</i>
+					<i class="fa-solid fa-crown fa-2x" style="color: #d4cf25;"> 오늘의 레시피</i>
 				</p>
 			</div>
 			<%
@@ -213,6 +212,55 @@ nav a:hover {
 				out.println("</div>");
 			}
 			%>
+			
+			<div class="recipe-today">
+				<p>
+					<i class="fa-solid fa-crown fa-2x" style="color: #d4cf25;"> 최근 올라온 레시피</i>
+				</p>
+			</div>
+			<%
+			String query2 = "SELECT * \r\n" +
+						 "FROM (SELECT R.recipe_id, R.title, R.writer_id, CU.cuisine_name, CU.category, R.write_time \r\n" +
+						 "      FROM RECIPE R, CUISINE CU \r\n" +
+						 "      WHERE R.cuisine_id = CU.cuisine_id \r\n" +
+						 "      ORDER BY R.write_time DESC) \r\n" +
+						 "WHERE ROWNUM <= 6";
+			pstmt = conn.prepareStatement(query2);
+			rs = pstmt.executeQuery();
+			
+			titles.clear(); writers.clear(); cuisines.clear(); categories.clear(); ids.clear();
+			
+			while(rs.next()) {
+				ids.add(rs.getInt(1));
+				String raw_title = rs.getString(2);
+				String title = raw_title.substring(0, Math.min(30, raw_title.length()));
+				if (raw_title.length() > 30)
+					title = title + "...";
+				titles.add(title);
+				writers.add(rs.getString(3));
+				cuisines.add(rs.getString(4));
+				categories.add(rs.getString(5));
+			}
+			
+			for (int j = 0; j < 2; j++) {
+
+				out.println("<div class=\"recipe-rank\">");
+				for (int i = 0; i < 3; i++) {
+					int idx = j * 3 + i;
+					out.println("<div class=\"post\">");
+//					out.println("<div style=\"font-size: 25px; color: #57cc99; margin-bottom: 15px;\">" + rank++ + "위</div>");/*  */
+					out.println(
+					"<div style=\"margin-bottom: 15px\"><a style=\"text-decoration-line: none; color: black;\" href=\"/WIF/view-recipe.jsp?recipe-id="
+							+ ids.get(idx) + "\">" + titles.get(idx) + "</a></div>");
+					out.println("<div><span style=\"float: left; color: #999;\">" + cuisines.get(idx) + " | " + categories.get(idx)
+					+ "</span><span style=\"float: right; color: #009933;\">" + writers.get(idx) + "</span></div>");
+					out.println("</div>");
+				}
+				out.println("</div>");
+			}
+			
+			%>
+			
 			<%
 			rs.close();
 			pstmt.close();
