@@ -1,2 +1,2 @@
 GitHub Repo URL: https://github.com/KoharuDaisukii/What-s-In-My-Fridge
-Contributors Graph: 
+Contributors Graph: https://github.com/KoharuDaisukii/What-s-In-My-Fridge/graphs/contributors
