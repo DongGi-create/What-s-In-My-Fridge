@@ -86,6 +86,37 @@ nav a:hover {
 	transition: background 0.3s ease;
 	background-color: #57cc99;
 }
+
+/* 유저 랭킹 스타일 */
+.userRanking {
+	margin-top: 20px;
+	padding: 15px;
+	border: 1px solid #ccc;
+	background-color: #f9f9f9;
+}
+
+.userRanking table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+.userRanking th, .userRanking td {
+	border: 1px solid #ddd;
+	padding: 8px;
+	text-align: center;
+}
+
+.userRanking th {
+	background-color: #f2f2f2;
+}
+
+.userRanking tr:nth-child(even) {
+	background-color: #f2f2f2;
+}
+
+.userRanking tr:hover {
+	background-color: #ddd;
+}
 </style>
 </head>
 
@@ -193,14 +224,71 @@ nav a:hover {
 			<div class="styled-button" id="loginButton2" style="width: 90%;">
 				<jsp:include page="./login-include.jsp" />
 			</div>
+
 			<div>
 				<p style="text-align: center;">
 					<i class="fa-solid fa-crown fa-2x" style="color: #d4cf25;">통계</i>
 				</p>
+
+				<div class="userRanking">
+					<h2>유저 랭킹</h2>
+					<p>좋아요 수와 댓글 수의 합으로 점수가 계산됩니다.!</p>
+					<table>
+						<thead>
+							<tr>
+								<th>순위</th>
+								<th>사용자 (Id)</th>
+								<th>점수</th>
+							</tr>
+						</thead>
+						<tbody>
+							<%
+							// 여기서부터 유저 랭킹 데이터를 동적으로 추가하는 부분입니다.
+							String sql = "SELECT\n" + "    id, S\n" + "FROM\n" + "    (\n" + "        SELECT\n"
+									+ "            SUM(Ccnt + Fcnt) AS S,\n" + "            T1.id\n" + "        FROM\n" + "                     (\n"
+									+ "                SELECT\n" + "                    COUNT(*)  AS Ccnt,\n"
+									+ "                    C.User_id AS id\n" + "                FROM\n" + "                    COMMENTS C\n"
+									+ "                GROUP BY\n" + "                    C.User_id\n" + "            ) T1\n"
+									+ "            JOIN (\n" + "                SELECT\n" + "                    COUNT(*)       AS Fcnt,\n"
+									+ "                    F.Like_user_id AS id\n" + "                FROM\n" + "                    FAVORITE F\n"
+									+ "                GROUP BY\n" + "                    F.Like_user_id\n" + "            ) T2 ON T1.id = T2.id\n"
+									+ "        GROUP BY\n" + "            T1.id\n" + "        ORDER BY\n" + "            S DESC\n" + "    )\n"
+									+ "WHERE\n" + "    ROWNUM <= 3";
+
+							try {
+								Statement stmt = conn.createStatement();
+								rs = stmt.executeQuery(sql);
+
+								rank = 1;
+
+								while (rs.next()) {
+									String userIds = rs.getString(1);
+									int score = rs.getInt(2);
+
+									// 유저 랭킹 테이블에 데이터를 동적으로 추가합니다.
+									out.println("<tr>");
+									out.println("<td>" + rank + "</td>");
+									out.println("<td>" + userIds + "</td>");
+									out.println("<td>" + score + "</td>");
+									out.println("</tr>");
+
+									rank++;
+								}
+								rs.close();
+								stmt.close();
+							} catch (SQLException e) {
+								e.printStackTrace();
+							}
+							%>
+						</tbody>
+					</table>
+				</div>
+
+
 				<div class="inactiveUser">
 					<div
-						style="font-size: 25px; color: #57cc99; margin-bottom: 15px; text-align: center;">
-						비활동 유저</div>
+						style="font-size: 25px; color: #57cc99; margin-bottom: 15px; text-align: center;">비활동
+						유저</div>
 					<%
 					String inactiveUserRatioContext = null;
 					String sql1 = "SELECT\r\n" + "	count(U.USER_ID)\r\n" + "FROM\r\n" + "	USERS U\r\n" + "WHERE\r\n"
@@ -240,14 +328,13 @@ nav a:hover {
 					}
 					%>
 				</div>
-			</div>
-			<div>
+
 				<div class="userAgeDistribution">
 					<div
-						style="font-size: 25px; color: #57cc99; margin-bottom: 15px; text-align: center;">
-						연령별 활동 비율</div>
+						style="font-size: 25px; color: #57cc99; margin-bottom: 15px; text-align: center;">연령별
+						활동 비율</div>
 					<%
-					String sql = "SELECT\r\n" + "	AGE_GROUP,\r\n" + "	COUNT(*) CNT\r\n" + "FROM\r\n" + "	(\r\n" + "		SELECT\r\n"
+					sql = "SELECT\r\n" + "	AGE_GROUP,\r\n" + "	COUNT(*) CNT\r\n" + "FROM\r\n" + "	(\r\n" + "		SELECT\r\n"
 							+ "			CASE\r\n" + "			    WHEN Age < 10              THEN\r\n" + "			        '9세 이하'\r\n"
 							+ "			    WHEN Age BETWEEN 10 AND 19 THEN\r\n" + "			        '10대'\r\n"
 							+ "			    WHEN Age BETWEEN 20 AND 29 THEN\r\n" + "			        '20대'\r\n"
@@ -281,6 +368,7 @@ nav a:hover {
 					}
 					%>
 				</div>
+
 			</div>
 		</section>
 	</main>
