@@ -1,7 +1,7 @@
 실행 방법
 ---------------------
 압축 해제 -> 프로젝트 import -> 프로젝트 properties - project facets에서 dynamic web module 3.0 체크, java 1.8 변경, runtimes에 톰캣 추가
-관련 영상 링크: 
+관련 영상 링크: https://youtu.be/wiCw_fjClhs
 ---------------------
 
 기능 설명
@@ -15,14 +15,18 @@
 
 유의 사항
 ---------------------
-Git Repository 에서 Clone 하실 경우 .classpath 와 .project 파일이 ignore 되어있기 때문에 주의하시기 바랍니다. 
+Git Repository 에서 Clone 하실 경우 .classpath 와 .project 파일이 ignore 되어있기 때문에 주의하시기 바랍니다.
+또한 Configure.java 파일도 ignore 되어있기 때문에 각자 해당 클래스 파일을 생성하고, 설정해놓은 DB의 USER ID에 맞는 public static final String 변수를 선언하셔야 합니다. 
+
+zip 파일로 project를 import 할 때, build path나 class path 등 환경마다 맞는 설정이 필요합니다.
 ---------------------
 
 
 Environment Settings
 ---------------------
 OS: Windows 11
-DBMS: Oracle DBMS (19c)
+DBMS: Oracle DBMS (19c) / ojdbc10
+Apache Tomcat: 8.5.95
 Language: Java (jdk-11)
 IDE: Ecplise IDE for Java EE 2021-09 / 2021-12
 ---------------------

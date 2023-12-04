@@ -1,14 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
-        
-    <wb-module deploy-name="WIF">
-                
+    <wb-module deploy-name="What-s-In-My-Fridge">
         <wb-resource deploy-path="/" source-path="/src/main/webapp" tag="defaultRootSource"/>
-        <wb-resource deploy-path="/WEB-INF/classes" source-path="/Phase3/src"/>
-                
-        <property name="context-root" value="WIF"/>
-                
-        <property name="java-output-path" value="/WIF/bin"/>
-            
+        <property name="context-root" value="What-s-In-My-Fridge"/>
+        <property name="java-output-path" value="/What-s-In-My-Fridge/src/main/webapp/WEB-INF/classes"/>
     </wb-module>
-    
 </project-modules>
