@@ -130,22 +130,23 @@ nav a:hover {
 				ArrayList<Integer> ids = new ArrayList<>();
 
 				while (rs.next()) {
-					int id = rs.getInt(1);
 					String raw_title = rs.getString(2);
 					String title = raw_title.substring(0, Math.min(30, raw_title.length()));
 					if (raw_title.length() > 30)
 				title = title + "...";
-					ids.add(id);
+					ids.add(rs.getInt(1));
 					titles.add(title);
 					writers.add(rs.getString(3));
 					cuisines.add(rs.getString(4));
 					categories.add(rs.getString(5));
 				}
 				if (ids.size() > 0) {
-					for (int j = 0; j < Math.round((ids.size() / 3)); j++) {
+					for (int j = 0; j < Math.ceil((ids.size() / 3.0)); j++) {
 				out.println("<div class=\"recipe-rank\">");
 				for (int i = 0; i < 3; i++) {
 					int idx = j * 3 + i;
+					if (idx >= ids.size())
+						break;
 					out.println("<div class=\"post\">");
 					out.println(
 							"<div style=\"margin-bottom: 15px\"><a style=\"text-decoration-line: none; color: black;\" href=\"/WIF/view-recipe.jsp?recipe-id="
@@ -160,15 +161,62 @@ nav a:hover {
 				} else {
 					out.println("<p>만들 수 있는 레시피가 없습니다.</p><p>냉장고에 재료를 더 추가해보세요!</p>");
 				}
-				rs.close();
-				pstmt.close();
-				JDBCDriver.close(conn);
 			} else {
-				out.println("<div class=\"recipe-rank\">로그인하시면 추천 레시피를 볼 수 있습니다.</div>");
+				out.println("<div class=\"recipe-rank\">로그인해야 추천 레시피를 볼 수 있습니다.</div>");
+			}
+			%>
+			<br>
+			<div class="recipe-today">
+				<p>
+					<i class="fa-solid fa-pen fa-2x" style="color: #d4cf25;"> 최근 올라온 레시피</i>
+				</p>
+			</div>
+			<%
+			String query2 = "SELECT * \r\n"
+					+ "FROM (SELECT R.recipe_id, R.title, R.writer_id, CU.cuisine_name, CU.category, R.write_time \r\n"
+					+ "      FROM RECIPE R, CUISINE CU \r\n" + "      WHERE R.cuisine_id = CU.cuisine_id \r\n"
+					+ "      ORDER BY R.write_time DESC) \r\n" + "WHERE ROWNUM <= 6";
+			pstmt = conn.prepareStatement(query2);
+			rs = pstmt.executeQuery();
+			ArrayList<String> titles = new ArrayList<>();
+			ArrayList<String> writers = new ArrayList<>();
+			ArrayList<String> cuisines = new ArrayList<>();
+			ArrayList<String> categories = new ArrayList<>();
+			ArrayList<Integer> ids = new ArrayList<>();
+
+			while (rs.next()) {
+				ids.add(rs.getInt(1));
+				String raw_title = rs.getString(2);
+				String title = raw_title.substring(0, Math.min(30, raw_title.length()));
+				if (raw_title.length() > 30)
+					title = title + "...";
+				titles.add(title);
+				writers.add(rs.getString(3));
+				cuisines.add(rs.getString(4));
+				categories.add(rs.getString(5));
+			}
+
+			for (int j = 0; j < 2; j++) {
+
+				out.println("<div class=\"recipe-rank\">");
+				for (int i = 0; i < 3; i++) {
+					int idx = j * 3 + i;
+					out.println("<div class=\"post\">");
+					//					out.println("<div style=\"font-size: 25px; color: #57cc99; margin-bottom: 15px;\">" + rank++ + "위</div>");/*  */
+					out.println(
+					"<div style=\"margin-bottom: 15px\"><a style=\"text-decoration-line: none; color: black;\" href=\"/WIF/view-recipe.jsp?recipe-id="
+							+ ids.get(idx) + "\">" + titles.get(idx) + "</a></div>");
+					out.println("<div><span style=\"float: left; color: #999;\">" + cuisines.get(idx) + " | " + categories.get(idx)
+					+ "</span><span style=\"float: right; color: #009933;\">" + writers.get(idx) + "</span></div>");
+					out.println("</div>");
+				}
+				out.println("</div>");
 			}
 			%>
 			<%
-
+			rs.close();
+			pstmt.close();
+			JDBCDriver.close(conn);
 			%>
 		</section>
 		<!-- 오른쪽 -->
