@@ -35,9 +35,9 @@
 	pstmt.setString(1,userId);
 	pstmt.setString(2,selectedIngredients);
 	int result = pstmt.executeUpdate();
-	if(result > 0){
+	/* if(result > 0){
 		
-	}	
+	} */	
 %>
 
 <script>
