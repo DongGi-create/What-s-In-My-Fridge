@@ -14,17 +14,7 @@
 </head>
 <body>
 	<!-- Page Top -->
-	<div id="pagetop" style="border: 1px solid black;">
-		<a id="wif-logo" href="/WIF/index.jsp" title="WIF 홈" style="text-decoration-line: none;">
-			<!-- 상 우 하 좌 -->
-			<i class="fa-solid fa-plate-wheat fa-2x" style="margin: 10px 10px 10px 10px;"> What's in my Fridge?</i>
-		</a>
-		<form id="search-container" action="/WIF/search-result.jsp" style="border: 1px solid black; display: inline;">
-			<input name="search-keyword" type="text" placeholder="검색창임"><input type="submit" value="검색">
-		</form>
-		<jsp:include page="./login-include.jsp"/>
-	</div>
-	<nav></nav>
+	<%@ include file="navigationBar.jsp" %>
 
 	<!-- 검색 결과 -->
 	<main id="container">

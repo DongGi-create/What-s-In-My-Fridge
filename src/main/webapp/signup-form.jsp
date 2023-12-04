@@ -13,24 +13,6 @@
 <title>회원가입</title>
 <script src="https://kit.fontawesome.com/7b62cb3616.js" crossorigin="anonymous"></script>
 <style>
-nav {
-	background-color: #57cc99;
-	overflow: hidden;
-}
-
-nav a {
-	float: left;
-	display: block;
-	color: white;
-	text-align: center;
-	padding: 14px 16px;
-	text-decoration: none;
-}
-
-nav a:hover {
-	background-color: #ddd;
-	color: black;
-}
 
 .signup-wrapper {
 	width: 500px;
@@ -80,23 +62,7 @@ nav a:hover {
 </head>
 <body>
 	<!-- Page Top -->
-	<div id="pagetop" style="border: 1px solid black;">
-		<a id="wif-logo" href="/WIF/index.jsp" title="WIF 홈" style="text-decoration-line: none;">
-			<!-- 상 우 하 좌 -->
-			<i class="fa-solid fa-plate-wheat fa-2x" style="margin: 10px 10px 10px 10px;"> What's in my Fridge?</i>
-		</a>
-		<form id="search-container" action="/WIF/search-result.jsp" style="border: 1px solid black; display: inline;">
-			<input name="search-keyword" type="text" placeholder="검색창임" required><input type="submit" value="검색">
-		</form>
-		<jsp:include page="./login-include.jsp" />
-	</div>
-
-	<nav>
-		<a href="index.jsp">홈</a>
-		<a href="all_cuisine.jsp">요리</a>
-		<a>레시피</a>
-		<a>냉장고</a>
-	</nav>
+	<%@ include file="navigationBar.jsp" %>
 
 	<hr>
 

@@ -1,5 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=EUC-KR"
-    pageEncoding="EUC-KR"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
 <%@ page language="java" import="java.text.*, java.sql.*" %>
 <%@ page language="java" import="Phase3Package.Configure, Phase3Package.JDBCDriver, Phase3Package.Cuisine, Phase3Package.Recipe, Phase3Package.URIConvert"%>
 
@@ -9,31 +9,12 @@
   <meta charset="UTF-8">
   <script src="https://kit.fontawesome.com/7b62cb3616.js" crossorigin="anonymous"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ø‰∏Æ</title>
+  <title>ÏöîÎ¶¨</title>
   <style>
-    nav {
-      background-color: #57cc99;
-      overflow: hidden;
-    }
-
-    nav a {
-      float: left;
-      display: block;
-      color: white;
-      text-align: center;
-      padding: 14px 16px;
-      text-decoration: none;
-    }
-
-    nav a:hover {
-      background-color: #ddd;
-      color: black;
-    }
-
     .recipe-container {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
-      grid-auto-rows: minmax(110px, auto); /* ¡∂¡§µ» «‡¿« ≥Ù¿Ã */
+      grid-auto-rows: minmax(110px, auto); /* Ï°∞Ï†ïÎêú ÌñâÏùò ÎÜíÏù¥ */
       gap: 40px;
       padding: 20px;
       max-width: 1500px;
@@ -59,23 +40,7 @@
   </style>
 </head>
 <body>
-	<!-- Page Top -->
-	<div id="pagetop" style="border: 1px solid black;">
-		<a id="wif-logo" href="/WIF/index.jsp" title="WIF »®" style="text-decoration-line: none;">
-			<!-- ªÛ øÏ «œ ¡¬ -->
-			<i class="fa-solid fa-plate-wheat fa-2x" style="margin: 10px 10px 10px 10px;"> What's in my Fridge?</i>
-		</a>
-		<form id="search-container" action="/WIF/search-result.jsp" style="border: 1px solid black; display: inline;">
-			<input name="search-keyword" type="text" placeholder="∞Àªˆ√¢¿”"><input type="submit" value="∞Àªˆ">
-		</form>
-		<jsp:include page="./login-include.jsp"/>
-	</div>
-	<nav>
-	  <a href="index.jsp">»®</a>
-	  <a href="all_cuisine.jsp">ø‰∏Æ</a>
-	  <a>∑πΩ√««</a>
-	  <a>≥√¿Â∞Ì</a>
-	</nav>
+	<%@ include file="navigationBar.jsp" %>
 
 	<div class="recipe-container" style="background-color: #f2f2f2">
 	  <!-- Recipe Template -->

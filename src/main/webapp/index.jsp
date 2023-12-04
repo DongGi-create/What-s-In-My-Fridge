@@ -17,141 +17,14 @@
 <script src="https://kit.fontawesome.com/7b62cb3616.js"
 	crossorigin="anonymous"></script>
 <title>What's in my Fridge?</title>
-<style>
-nav {
-	background-color: #57cc99;
-	overflow: hidden;
-}
-
-nav a {
-	float: left;
-	display: block;
-	color: white;
-	text-align: center;
-	padding: 14px 16px;
-	text-decoration: none;
-}
-
-nav a:hover {
-	background-color: #ddd;
-	color: black;
-}
-
-.recipe-rank, .recipe-today {
-	max-width: 1200px;
-	margin: 0 auto;
-	padding: 10px;
-	display: flex;
-	justify-content: space-between;
-}
-
-.post {
-	width: 30%;
-	box-sizing: border-box;
-	border: 1px solid #ddd;
-	padding: 20px;
-	margin-bottom: 20px;
-}
-
-.inactiveUser {
-	width: 90%;
-	box-sizing: border-box;
-	border: 1px solid #ddd;
-	padding: 20px;
-	margin: 20px auto; /* 위아래 20px, 좌우 가운데 정렬 */
-}
-
-.userAgeDistribution {
-	width: 90%;
-	box-sizing: border-box;
-	border: 1px solid #ddd;
-	padding: 20px;
-	margin: 20px auto; /* 위아래 20px, 좌우 가운데 정렬 */
-}
-
-.styled-button {
-	display: inline-block;
-	padding: 10px 20px;
-	font-size: 16px;
-	font-weight: bold;
-	text-align: center;
-	text-decoration: none;
-	cursor: pointer;
-	border: none;
-	border-radius: 5px;
-	color: #fff;
-	margin: 0 auto;
-	background-color: #57cc99;
-	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-	transition: background 0.3s ease;
-	background-color: #57cc99;
-}
-
-/* 유저 랭킹 스타일 */
-.userRanking {
-	margin-top: 20px;
-	padding: 15px;
-	border: 1px solid #ccc;
-	background-color: #f9f9f9;
-}
-
-.userRanking table {
-	width: 100%;
-	border-collapse: collapse;
-}
-
-.userRanking th, .userRanking td {
-	border: 1px solid #ddd;
-	padding: 8px;
-	text-align: center;
-}
-
-.userRanking th {
-	background-color: #f2f2f2;
-}
-
-.userRanking tr:nth-child(even) {
-	background-color: #f2f2f2;
-}
-
-.userRanking tr:hover {
-	background-color: #ddd;
-}
-</style>
+<link rel="stylesheet" type="text/css" href="indexStyle.css">
 </head>
 
 <body>
 	<!-- 프로젝트 properties - project facets에서 dynamic web module 3.0 체크, java 1.8 변경, runtimes에 톰캣 추가-->
 	<!-- Page Top -->
-	<div id="pagetop">
-		<a id="wif-logo" href="/WIF/index.jsp" title="WIF 홈"
-			style="text-decoration-line: none;"> <!-- 상 우 하 좌 --> <i
-			class="fa-solid fa-plate-wheat fa-2x"
-			style="margin: 10px 10px 0px 10px; color: #57cc99;"> What's in my
-				Fridge?</i>
-		</a>
-		<form id="search-container" action="/WIF/search-result.jsp"
-			style="display: inline;">
-			<input
-				style="width: 40%; height: 30px; box-sizing: border-box; margin-bottom: 10px"
-				name="search-keyword" type="text" placeholder="검색창임" required>
-			<input type="submit" value="검색" style="width: 60px; height: 30px;">
-		</form>
-		<div
-			style="float: right; height: 50px; padding-top: 7px; align-items: center; margin: 0 auto; padding: 0 auto;">
-			<span id="loginButton" class="styled-button"><jsp:include
-					page="./login-include.jsp" /></span>
-		</div>
-	</div>
 
-	<nav>
-		<a href="index.jsp">홈</a>
-		<a href="all_cuisine.jsp">요리</a>
-		<a href="recipe-tab.jsp">레시피</a>
-		<a href="my_fridge.jsp">냉장고</a>
-	</nav>
-
-	<hr>
+	<%@ include file="navigationBar.jsp" %>
 
 	<main id="container">
 		<div id="뭉탱이" style="display: flex; height: 100%;"></div>
@@ -271,9 +144,9 @@ nav a:hover {
 		<!-- 오른쪽 -->
 		<section id="login-box"
 			style="display: block; float: right; width: 30%">
-			<div class="styled-button" id="loginButton2" style="width: 90%;">
+			<%-- <div class="styled-button" id="loginButton2" style="width: 90%;">
 				<jsp:include page="./login-include.jsp" />
-			</div>
+			</div> --%>
 
 			<div>
 				<p style="text-align: center;">
@@ -404,6 +277,7 @@ nav a:hover {
 						rs = stmt.executeQuery(sql);
 						while (rs.next()) {
 							String groupName = rs.getString(1);
+							if (groupName == null) continue;
 							int cnt = rs.getInt(2);
 							out.println("<div style=\"margin-bottom: 15px; text-align: center;\">");
 							out.println("<a style=\"display: inline-block;\">" + groupName + "분포: " + String.valueOf(cnt) + "</a>");
@@ -430,7 +304,7 @@ nav a:hover {
 					// 클릭 시 이동할 페이지의 URL을 설정
 					var newPageURL = ''; // 여기에 이동하고 싶은 페이지의 URL을 입력하세요
 					if (document.getElementById('loginNeeded') != null) {
-						newPageURL = '/WIF/login-form.html';
+						newPageURL = '/WIF/login-form.jsp';
 					} else {
 						newPageURL = '/WIF/logout.jsp';
 					}
@@ -443,7 +317,7 @@ nav a:hover {
 					// 클릭 시 이동할 페이지의 URL을 설정
 					var newPageURL = ''; // 여기에 이동하고 싶은 페이지의 URL을 입력하세요
 					if (document.getElementById('loginNeeded') != null) {
-						newPageURL = '/WIF/login-form.html';
+						newPageURL = '/WIF/login-form.jsp';
 					} else {
 						newPageURL = '/WIF/logout.jsp';
 					}

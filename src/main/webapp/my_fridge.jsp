@@ -1,5 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=EUC-KR"
-	pageEncoding="EUC-KR"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
 <%@ page language="java"
 	import="Phase3Package.Configure, Phase3Package.JDBCDriver, Phase3Package.OwnIngredient"%>
 <%@ page language="java" import="java.sql.*"%>
@@ -9,7 +9,7 @@
 <head>
 <meta charset="UTF-8">
 <script src="https://kit.fontawesome.com/7b62cb3616.js" crossorigin="anonymous"></script>
-<title>³ÃÀå°í Àç·á ¸ñ·Ï</title>
+<title>ëƒ‰ì¥ê³  ì¬ë£Œ ëª©ë¡</title>
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 	<link rel="stylesheet" type="text/css" href="my_fridge.css">
@@ -17,28 +17,16 @@
 </head>
 <body>
 	<!-- Page Top -->
-	<div id="pagetop" style="border: 1px solid black;">
-		<a id="wif-logo" href="/WIF/index.jsp" title="WIF È¨"
-			style="text-decoration-line: none;"> <!-- »ó ¿ì ÇÏ ÁÂ --> <i
-			class="fa-solid fa-plate-wheat fa-2x"
-			style="margin: 10px 10px 10px 10px;"> What's in my Fridge?</i>
-		</a>
-		<form id="search-container" action="/WIF/search-result.jsp"
-			style="border: 1px solid black; display: inline;">
-			<input name="search-keyword" type="text" placeholder="°Ë»öÃ¢ÀÓ"><input
-				type="submit" value="°Ë»ö">
-		</form>
-	</div>
-	<nav></nav>
+	<%@ include file="navigationBar.jsp" %>
 
-
-	<h1>³ÃÀå°í ¾ÈÀÇ Àç·á</h1>
+	
+	<h1>ëƒ‰ì¥ê³  ì•ˆì˜ ì¬ë£Œ</h1>
 	<ul id="ingredient-list">
-		<!-- Àç·áµéÀ» ¿©±â¿¡ µ¿ÀûÀ¸·Î Ãß°¡ÇÒ ¿¹Á¤ -->
+		<!-- ì¬ë£Œë“¤ì„ ì—¬ê¸°ì— ë™ì ìœ¼ë¡œ ì¶”ê°€í•  ì˜ˆì • -->
 	</ul>
 
 	<%
-	/* DB¿¬°á */
+	/* DBì—°ê²° */
 	String URL = "jdbc:oracle:thin:@localhost:1521:orcl";
 	String DB_ID = Configure.DB_ID;
 	String DB_PW = "comp322";
@@ -65,14 +53,14 @@
 		%>
 		
 		<div class="btn-container">
-        	<a href="/WIF/addIngredient.jsp" class="add-btn">³ÃÀå°í Àç·á Ãß°¡ÇÏ±â</a>
-        	<a href="/WIF/removeIngredient.jsp" class="remove-btn">³ÃÀå°í Àç·á Á¦°ÅÇÏ±â</a>
+        	<a href="/WIF/addIngredient.jsp" class="add-btn">ëƒ‰ì¥ê³  ì¬ë£Œ ì¶”ê°€í•˜ê¸°</a>
+        	<a href="/WIF/removeIngredient.jsp" class="remove-btn">ëƒ‰ì¥ê³  ì¬ë£Œ ì œê±°í•˜ê¸°</a>
     	</div>
 		<%
 	} else {
-		out.println("·Î±×ÀÎÀÌ ÇÊ¿äÇÕ´Ï´Ù...");
+		out.println("ë¡œê·¸ì¸ì´ í•„ìš”í•©ë‹ˆë‹¤...");
 		%>
-	    <p>·Î±×ÀÎÀÌ ÇÊ¿äÇÕ´Ï´Ù. <a href="/WIF/login-form.html">·Î±×ÀÎ</a>ÇÏ¼¼¿ä.</p>
+	    <p>ë¡œê·¸ì¸ì´ í•„ìš”í•©ë‹ˆë‹¤. <a href="/WIF/login-form.jsp">ë¡œê·¸ì¸</a>í•˜ì„¸ìš”.</p>
 		<%
 	}
 	%>
@@ -94,11 +82,11 @@
 
     function showIngredients() {
         const ingredientList = document.getElementById("ingredient-list");
-        ingredientList.innerHTML = ""; // ±âÁ¸ ¸ñ·Ï ÃÊ±âÈ­
+        ingredientList.innerHTML = ""; // ê¸°ì¡´ ëª©ë¡ ì´ˆê¸°í™”
 
         ingredients.forEach((ingredient) => {
             const li = document.createElement("li");
-			li.textContent = 'Àç·á: ' + ingredient.ingredient_Name + ', ¾ç: ' + ingredient.quantity + ', ´ÜÀ§: ' + ingredient.unit;            
+			li.textContent = 'ì¬ë£Œ: ' + ingredient.ingredient_Name + ', ì–‘: ' + ingredient.quantity + ', ë‹¨ìœ„: ' + ingredient.unit;            
 			ingredientList.appendChild(li);
         });
     }

@@ -8,10 +8,10 @@ public class Require
 {
 	private int recipe_ID;
 	private int ingredient_ID;
-	private int quantity;
+	private float quantity;
 	private String unit;
 
-	public Require(int recipe_ID, int ingredient_ID, int quantity, String unit)
+	public Require(int recipe_ID, int ingredient_ID, float quantity, String unit)
 	{
 		this.recipe_ID = recipe_ID;
 		this.ingredient_ID = ingredient_ID;
@@ -54,12 +54,12 @@ public class Require
 		this.ingredient_ID = ingredient_ID;
 	}
 
-	public int getQuantity()
+	public float getQuantity()
 	{
 		return quantity;
 	}
 
-	public void setQuantity(int quantity)
+	public void setQuantity(float quantity)
 	{
 		this.quantity = quantity;
 	}
